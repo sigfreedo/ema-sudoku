@@ -58,11 +58,23 @@ const EmaSudoku = () => {
       hideCompletedDesc: "Disabilita i simboli già inseriti {gridSize} volte nella griglia",
       smartFilterToggle: "Filtro Intelligente",
       smartFilterDesc: "Mostra solo i simboli che possono essere inseriti nella casella",
-      footer: "Fatto con ❤️ per Ema da papà."
+      footer: "Fatto con ❤️ per Ema da papà.",
+      themes: {
+        numbers: "Numerico",
+        animals: "Animalesco",
+        dinosaurs: "Preistorico",
+        fruits: "Fruttoso",
+        shapes: "Geometrico",
+        sports: "Sportivo",
+        vegetables: "Vegetale",
+        desserts: "Goloso",
+        flowers: "Fiorito",
+        monsters: "Mostruoso"
+      }
     },
     en: {
       title: "Ema Sudoku 🥷",
-      newGame: "Nuova Partita",
+      newGame: "New Game",
       settings: "Settings",
       info: "Info",
       timer: "Timer",
@@ -99,11 +111,23 @@ const EmaSudoku = () => {
       hideCompletedDesc: "Disable symbols already inserted {gridSize} times in the grid",
       smartFilterToggle: "Smart Filter",
       smartFilterDesc: "Show only symbols that can be inserted in the cell",
-      footer: "Made with ❤️ for Ema by dad."
+      footer: "Made with ❤️ for Ema by dad.",
+      themes: {
+        numbers: "Numeric",
+        animals: "Animal",
+        dinosaurs: "Prehistoric",
+        fruits: "Fruity",
+        shapes: "Geometric",
+        sports: "Sporty",
+        vegetables: "Veggie",
+        desserts: "Sweet",
+        flowers: "Floral",
+        monsters: "Spooky"
+      }
     },
     es: {
       title: "Ema Sudoku 🥷",
-      newGame: "Nuova Partita",
+      newGame: "Nuevo Juego",
       settings: "Configuración",
       info: "Info",
       timer: "Cronómetro",
@@ -140,7 +164,19 @@ const EmaSudoku = () => {
       hideCompletedDesc: "Desactiva los símbolos ya insertados {gridSize} veces en la cuadrícula",
       smartFilterToggle: "Filtro Inteligente",
       smartFilterDesc: "Muestra solo los símbolos que se pueden insertar en la celda",
-      footer: "Hecho con ❤️ para Ema por papá."
+      footer: "Hecho con ❤️ para Ema por papá.",
+      themes: {
+        numbers: "Numérico",
+        animals: "Animales",
+        dinosaurs: "Prehistórico",
+        fruits: "Frutas",
+        shapes: "Geométrico",
+        sports: "Deportivo",
+        vegetables: "Verduras",
+        desserts: "Dulces",
+        flowers: "Flores",
+        monsters: "Monstruoso"
+      }
     }
   };
 
@@ -876,17 +912,53 @@ const EmaSudoku = () => {
             {t.title}
           </h1>
           <div className="flex gap-2 items-center flex-shrink-0 flex-wrap justify-center">
-            {/* Language Selector - dropdown */}
+            {/* Timer Button - minimal icon only, SAME HEIGHT as others */}
+            <button
+              onClick={() => {
+                if (timerActive) {
+                  setTimerActive(false);
+                  setTimerPaused(false);
+                  setSeconds(0);
+                } else {
+                  setTimerActive(true);
+                  setTimerPaused(false);
+                  setSeconds(0);
+                }
+              }}
+              className={`p-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors`}
+              title={timerActive ? t.stopTimer : t.timer}
+            >
+              {timerActive ? <Square size={24} /> : <Timer size={24} />}
+            </button>
+            
+            {/* Pause/Play Button - minimal icon only (only when timer active) */}
+            {timerActive && (
+              <>
+                <button
+                  onClick={() => setTimerPaused(!timerPaused)}
+                  className={`p-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors`}
+                  title={timerPaused ? t.resumeTimer : t.pauseTimer}
+                >
+                  {timerPaused ? <Play size={24} /> : <Pause size={24} />}
+                </button>
+                
+                {/* Timer Display */}
+                <div className={`px-3 py-2 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold text-sm`}>
+                  {formatTime(seconds)}
+                </div>
+              </>
+            )}
+            
+            {/* Language Selector - dropdown without chevron, colorful flag */}
             <div className="relative">
               <button
                 onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                className={`p-2 rounded-lg ${cardBg} border ${borderColor} ${hoverBg} transition-colors flex items-center gap-1 grayscale`}
+                className={`p-2 rounded-lg ${cardBg} border ${borderColor} ${hoverBg} transition-colors`}
                 title="Language"
               >
-                <span className="text-lg">
+                <span className="text-2xl leading-none">
                   {language === 'it' ? '🇮🇹' : language === 'en' ? '🇬🇧' : '🇪🇸'}
                 </span>
-                <ChevronDown size={16} className="opacity-50" />
               </button>
               {showLanguageMenu && (
                 <>
@@ -918,43 +990,6 @@ const EmaSudoku = () => {
                 </>
               )}
             </div>
-            
-            {/* Timer Button - minimal icon only */}
-            <button
-              onClick={() => {
-                if (timerActive) {
-                  setTimerActive(false);
-                  setTimerPaused(false);
-                  setSeconds(0);
-                } else {
-                  setTimerActive(true);
-                  setTimerPaused(false);
-                  setSeconds(0);
-                }
-              }}
-              className={`p-2 py-1 rounded-lg border ${borderColor} ${hoverBg} transition-colors`}
-              title={timerActive ? t.stopTimer : t.timer}
-            >
-              {timerActive ? <Square size={20} /> : <Timer size={20} />}
-            </button>
-            
-            {/* Pause/Play Button - minimal icon only (only when timer active) */}
-            {timerActive && (
-              <>
-                <button
-                  onClick={() => setTimerPaused(!timerPaused)}
-                  className={`p-2 py-1 rounded-lg border ${borderColor} ${hoverBg} transition-colors`}
-                  title={timerPaused ? t.resumeTimer : t.pauseTimer}
-                >
-                  {timerPaused ? <Play size={20} /> : <Pause size={20} />}
-                </button>
-                
-                {/* Timer Display */}
-                <div className={`px-3 py-1 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold text-sm`}>
-                  {formatTime(seconds)}
-                </div>
-              </>
-            )}
             
             <button
               onClick={() => setShowInfo(!showInfo)}
@@ -1113,12 +1148,12 @@ const EmaSudoku = () => {
                         {/* Prima riga */}
                         <div className="flex gap-2 justify-center">
                           {[
-                            { key: 'numbers', icon: '🔢', name: 'Numerico', bg: 'bg-blue-600/70', border: 'border-blue-600' },
-                            { key: 'animals', icon: '🐾', name: 'Animalesco', bg: 'bg-amber-600/70', border: 'border-amber-600' },
-                            { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', bg: 'bg-green-600/70', border: 'border-green-600' },
-                            { key: 'fruits', icon: '🍎', name: 'Fruttoso', bg: 'bg-orange-500/70', border: 'border-orange-500' },
-                            { key: 'shapes', icon: '⬛', name: 'Geometrico', bg: 'bg-purple-500/70', border: 'border-purple-500' }
-                          ].map(({ key, icon, name, bg, border }) => (
+                            { key: 'numbers', icon: '🔢', bg: 'bg-blue-600/50', border: 'border-blue-600' },
+                            { key: 'animals', icon: '🐾', bg: 'bg-amber-600/50', border: 'border-amber-600' },
+                            { key: 'dinosaurs', icon: '🦕', bg: 'bg-green-600/50', border: 'border-green-600' },
+                            { key: 'fruits', icon: '🍎', bg: 'bg-orange-500/50', border: 'border-orange-500' },
+                            { key: 'shapes', icon: '⬛', bg: 'bg-purple-500/50', border: 'border-purple-500' }
+                          ].map(({ key, icon, bg, border }) => (
                             <button
                               key={key}
                               onClick={() => setSymbolSet(key)}
@@ -1130,19 +1165,19 @@ const EmaSudoku = () => {
                               }`}>
                                 {icon}
                               </div>
-                              <span className="text-[9px] font-medium text-center leading-tight">{name}</span>
+                              <span className="text-[9px] font-medium text-center leading-tight">{t.themes[key]}</span>
                             </button>
                           ))}
                         </div>
                         {/* Seconda riga */}
                         <div className="flex gap-2 justify-center">
                           {[
-                            { key: 'sports', icon: '⚽', name: 'Sportivo', bg: 'bg-blue-600/70', border: 'border-blue-600' },
-                            { key: 'vegetables', icon: '🥕', name: 'Vegetale', bg: 'bg-lime-600/70', border: 'border-lime-600' },
-                            { key: 'desserts', icon: '🍰', name: 'Goloso', bg: 'bg-pink-500/70', border: 'border-pink-500' },
-                            { key: 'flowers', icon: '🌸', name: 'Fiorito', bg: 'bg-rose-500/70', border: 'border-rose-500' },
-                            { key: 'monsters', icon: '👻', name: 'Mostruoso', bg: 'bg-indigo-600/70', border: 'border-indigo-600' }
-                          ].map(({ key, icon, name, bg, border }) => (
+                            { key: 'sports', icon: '⚽', bg: 'bg-blue-600/50', border: 'border-blue-600' },
+                            { key: 'vegetables', icon: '🥕', bg: 'bg-lime-600/50', border: 'border-lime-600' },
+                            { key: 'desserts', icon: '🍰', bg: 'bg-pink-500/50', border: 'border-pink-500' },
+                            { key: 'flowers', icon: '🌸', bg: 'bg-rose-500/50', border: 'border-rose-500' },
+                            { key: 'monsters', icon: '👻', bg: 'bg-indigo-600/50', border: 'border-indigo-600' }
+                          ].map(({ key, icon, bg, border }) => (
                             <button
                               key={key}
                               onClick={() => setSymbolSet(key)}
@@ -1154,7 +1189,7 @@ const EmaSudoku = () => {
                               }`}>
                                 {icon}
                               </div>
-                              <span className="text-[9px] font-medium text-center leading-tight">{name}</span>
+                              <span className="text-[9px] font-medium text-center leading-tight">{t.themes[key]}</span>
                             </button>
                           ))}
                         </div>
@@ -1483,7 +1518,7 @@ const EmaSudoku = () => {
               ${darkMode ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'} text-white`}
           >
             <RotateCcw size={20} />
-            Nuovo Gioco
+            {t.newGame}
           </button>
           
           {!completed && (
