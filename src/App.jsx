@@ -814,152 +814,195 @@ const EmaSudoku = () => {
                     <X size={20} />
                   </button>
                 </div>
-                <div className="space-y-6 text-sm">
+                <div className="space-y-5 text-sm">
               
-              {/* Dimensione griglia con mini-grids visive */}
+              {/* Dimensione griglia con slider e preview */}
               <div>
-                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Dimensione Griglia</label>
-                <div className="flex gap-3 justify-center">
-                  {[
-                    { size: 4, grid: '┌─┬─┐\n│ │ │\n├─┼─┤\n│ │ │\n└─┴─┘' },
-                    { size: 6, grid: '┌──┬──┬──┐\n│  │  │  │\n├──┼──┼──┤\n│  │  │  │\n└──┴──┴──┘' },
-                    { size: 9, grid: '┌──┬──┬──┐\n│  │  │  │\n├──┼──┼──┤\n│  │  │  │\n├──┼──┼──┤\n│  │  │  │\n└──┴──┴──┘' }
-                  ].map(({ size, grid }) => (
-                    <button
-                      key={size}
-                      onClick={() => setGridSize(size)}
-                      className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
-                        gridSize === size 
-                          ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}` 
-                          : `${borderColor} ${hoverBg}`
-                      }`}
+                <div className="flex items-center justify-between mb-2">
+                  <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Dimensione</label>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-bold">{gridSize}×{gridSize}</span>
+                    {/* Mini grid preview */}
+                    <div 
+                      className="grid gap-[1px] bg-gray-400 dark:bg-gray-600 p-[2px] rounded"
+                      style={{
+                        gridTemplateColumns: `repeat(${gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3}, 1fr)`,
+                        gridTemplateRows: `repeat(${gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3}, 1fr)`,
+                        width: '32px',
+                        height: '32px'
+                      }}
                     >
-                      <pre className="text-[8px] leading-tight opacity-60 whitespace-pre">{grid}</pre>
-                      <span className="text-xs font-bold">{size}×{size}</span>
-                    </button>
-                  ))}
+                      {Array.from({ length: (gridSize === 4 ? 4 : gridSize === 6 ? 6 : 9) }).map((_, i) => (
+                        <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-white'}`}></div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="2"
+                  value={gridSize === 4 ? 0 : gridSize === 6 ? 1 : 2}
+                  onChange={(e) => setGridSize([4, 6, 9][parseInt(e.target.value)])}
+                  className="w-full h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                />
               </div>
 
               {/* Difficoltà con slider ed emoji */}
               <div>
-                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Livello di Difficoltà</label>
-                <div className="flex items-center gap-4">
-                  {['easy', 'medium', 'hard'].map((level, idx) => {
-                    const emoji = level === 'easy' ? '😊' : level === 'medium' ? '🤔' : '😰';
-                    const label = level === 'easy' ? 'Facile' : level === 'medium' ? 'Medio' : 'Difficile';
-                    return (
-                      <button
-                        key={level}
-                        onClick={() => setDifficulty(level)}
-                        className={`flex-1 flex flex-col items-center gap-1 px-3 py-2 rounded-lg border-2 transition-all ${
-                          difficulty === level
-                            ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
-                            : `${borderColor} ${hoverBg}`
-                        }`}
-                      >
-                        <span className="text-2xl">{emoji}</span>
-                        <span className="text-xs font-semibold">{label}</span>
-                      </button>
-                    );
-                  })}
+                <div className="flex items-center justify-between mb-2">
+                  <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Difficoltà</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold">
+                      {difficulty === 'easy' ? 'Facile' : difficulty === 'medium' ? 'Medio' : 'Difficile'}
+                    </span>
+                    <span className="text-xl">
+                      {difficulty === 'easy' ? '😊' : difficulty === 'medium' ? '🤔' : '😰'}
+                    </span>
+                  </div>
                 </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="2"
+                  value={difficulty === 'easy' ? 0 : difficulty === 'medium' ? 1 : 2}
+                  onChange={(e) => setDifficulty(['easy', 'medium', 'hard'][parseInt(e.target.value)])}
+                  className="w-full h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                />
               </div>
 
-              {/* Temi con icone circolari */}
+              {/* Temi con quadrati */}
               <div>
-                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Tema</label>
+                <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">Tema</label>
                 <div className="flex flex-wrap gap-2 justify-center">
                   {[
-                    { key: 'numbers', icon: '🔢', name: 'Numerico', color: 'bg-gray-500/70' },
-                    { key: 'animals', icon: '🐾', name: 'Animalesco', color: 'bg-amber-600/70' },
-                    { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', color: 'bg-green-600/70' },
-                    { key: 'fruits', icon: '🍎', name: 'Fruttoso', color: 'bg-orange-500/70' },
-                    { key: 'shapes', icon: '⬛', name: 'Geometrico', color: 'bg-purple-500/70' },
-                    { key: 'sports', icon: '⚽', name: 'Sportivo', color: 'bg-blue-600/70' },
-                    { key: 'vegetables', icon: '🥕', name: 'Vegetale', color: 'bg-lime-600/70' },
-                    { key: 'desserts', icon: '🍰', name: 'Goloso', color: 'bg-pink-500/70' },
-                    { key: 'flowers', icon: '🌸', name: 'Fiorito', color: 'bg-rose-500/70' },
-                    { key: 'monsters', icon: '👻', name: 'Mostruoso', color: 'bg-indigo-600/70' }
+                    { key: 'numbers', icon: '🔢', name: 'Numerico', color: 'border-gray-500' },
+                    { key: 'animals', icon: '🐾', name: 'Animalesco', color: 'border-amber-500' },
+                    { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', color: 'border-green-500' },
+                    { key: 'fruits', icon: '🍎', name: 'Fruttoso', color: 'border-orange-500' },
+                    { key: 'shapes', icon: '⬛', name: 'Geometrico', color: 'border-purple-500' },
+                    { key: 'sports', icon: '⚽', name: 'Sportivo', color: 'border-blue-500' },
+                    { key: 'vegetables', icon: '🥕', name: 'Vegetale', color: 'border-lime-500' },
+                    { key: 'desserts', icon: '🍰', name: 'Goloso', color: 'border-pink-500' },
+                    { key: 'flowers', icon: '🌸', name: 'Fiorito', color: 'border-rose-500' },
+                    { key: 'monsters', icon: '👻', name: 'Mostruoso', color: 'border-indigo-500' }
                   ].map(({ key, icon, name, color }) => (
                     <button
                       key={key}
                       onClick={() => setSymbolSet(key)}
-                      className={`flex flex-col items-center gap-1 p-2 rounded-lg border-2 transition-all ${
-                        symbolSet === key
-                          ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
-                          : `border-transparent hover:border-gray-400`
-                      }`}
+                      className="flex flex-col items-center gap-1"
+                      style={{ width: '72px' }}
                     >
-                      <div className={`w-10 h-10 rounded-full ${color} flex items-center justify-center text-xl border-2 border-white/30`}>
+                      <div className={`w-14 h-14 rounded-lg flex items-center justify-center text-2xl border-2 transition-all ${
+                        symbolSet === key
+                          ? `${color} bg-opacity-20 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`
+                          : 'border-transparent bg-gray-200 dark:bg-gray-700 hover:border-gray-400'
+                      }`}>
                         {icon}
                       </div>
-                      <span className="text-[10px] font-medium">{name}</span>
+                      <span className="text-[9px] font-medium text-center leading-tight">{name}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Dark Mode con sole/luna */}
+              {/* Dark Mode con toggle e testo interno */}
               <div>
-                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Modalità</label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setDarkMode(false)}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
-                      !darkMode
-                        ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
-                        : `${borderColor} ${hoverBg}`
-                    }`}
-                  >
-                    <span className="text-lg">☀️</span>
-                    <span className="text-xs font-semibold">Chiaro</span>
-                  </button>
-                  <button
-                    onClick={() => setDarkMode(true)}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
-                      darkMode
-                        ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
-                        : `${borderColor} ${hoverBg}`
-                    }`}
-                  >
-                    <span className="text-lg">🌙</span>
-                    <span className="text-xs font-semibold">Scuro</span>
-                  </button>
-                </div>
+                <label className="font-semibold mb-2 block text-xs uppercase tracking-wide opacity-70">Modalità</label>
+                <label className="relative inline-flex items-center cursor-pointer w-full">
+                  <input
+                    type="checkbox"
+                    checked={darkMode}
+                    onChange={(e) => setDarkMode(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className={`w-full h-10 rounded-lg transition-colors flex items-center justify-between px-3 ${
+                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                  }`}>
+                    <div className={`flex items-center gap-2 transition-opacity ${!darkMode ? 'opacity-100' : 'opacity-40'}`}>
+                      <span className="text-sm">☀️</span>
+                      <span className="text-xs font-semibold">Chiaro</span>
+                    </div>
+                    <div className={`absolute left-1/2 -translate-x-1/2 w-16 h-8 rounded-md transition-all ${
+                      darkMode ? 'bg-blue-600 translate-x-[25%]' : 'bg-blue-500 -translate-x-[25%]'
+                    }`}></div>
+                    <div className={`flex items-center gap-2 transition-opacity ${darkMode ? 'opacity-100' : 'opacity-40'}`}>
+                      <span className="text-xs font-semibold">Scuro</span>
+                      <span className="text-sm">🌙</span>
+                    </div>
+                  </div>
+                </label>
               </div>
 
-              {/* Ultimi 3 toggle compatti in riga */}
-              <div>
-                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Aiuti</label>
-                <div className="flex flex-wrap gap-3">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={hideCompleted}
-                      onChange={(e) => setHideCompleted(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300"
-                    />
-                    <span className="text-xs">Nascondi Completati</span>
+              {/* Ultimi 3 toggle con descrizioni */}
+              <div className="space-y-3 pt-2">
+                <div>
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <span className="font-semibold text-xs">Nascondi Completati</span>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={hideCompleted}
+                        onChange={(e) => setHideCompleted(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-11 h-6 rounded-full transition-colors ${
+                        hideCompleted ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                      }`}></div>
+                      <div className={`absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                        hideCompleted ? 'translate-x-5' : 'translate-x-0'
+                      }`}></div>
+                    </div>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={showErrors}
-                      onChange={(e) => setShowErrors(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300"
-                    />
-                    <span className="text-xs">Evidenzia Errori</span>
+                  <p className="text-[10px] opacity-60 mt-0.5">
+                    Disabilita i simboli già usati {gridSize} volte
+                  </p>
+                </div>
+
+                <div>
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <span className="font-semibold text-xs">Evidenzia Errori</span>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={showErrors}
+                        onChange={(e) => setShowErrors(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-11 h-6 rounded-full transition-colors ${
+                        showErrors ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                      }`}></div>
+                      <div className={`absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                        showErrors ? 'translate-x-5' : 'translate-x-0'
+                      }`}></div>
+                    </div>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={smartFilter}
-                      onChange={(e) => setSmartFilter(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300"
-                    />
-                    <span className="text-xs">Filtro Intelligente</span>
+                  <p className="text-[10px] opacity-60 mt-0.5">
+                    Mostra feedback rosso per i numeri sbagliati
+                  </p>
+                </div>
+
+                <div>
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <span className="font-semibold text-xs">Filtro Intelligente</span>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={smartFilter}
+                        onChange={(e) => setSmartFilter(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-11 h-6 rounded-full transition-colors ${
+                        smartFilter ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                      }`}></div>
+                      <div className={`absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                        smartFilter ? 'translate-x-5' : 'translate-x-0'
+                      }`}></div>
+                    </div>
                   </label>
+                  <p className="text-[10px] opacity-60 mt-0.5">
+                    Mostra solo i simboli validi per la casella
+                  </p>
                 </div>
               </div>
 
