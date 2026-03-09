@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Lightbulb, Trophy, Info, X } from 'lucide-react';
+import { Settings, RotateCcw, Lightbulb, Trophy, Info, X, Timer } from 'lucide-react';
 
 const EmaSudoku = () => {
   // Configurazione
@@ -409,6 +409,8 @@ const EmaSudoku = () => {
   const [errors, setErrors] = useState([]);
   const [completed, setCompleted] = useState(false);
   const [hints, setHints] = useState(3);
+  const [timerActive, setTimerActive] = useState(false);
+  const [seconds, setSeconds] = useState(0);
 
   // Ricarica gioco quando cambiano impostazioni
   useEffect(() => {
@@ -430,9 +432,36 @@ const EmaSudoku = () => {
       );
       if (isCorrect && !completed) {
         setCompleted(true);
+        setTimerActive(false);
       }
     }
   }, [board, game.solution, completed]);
+
+  // Timer
+  useEffect(() => {
+    let interval;
+    if (timerActive && !completed) {
+      interval = setInterval(() => {
+        setSeconds(s => s + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, completed]);
+
+  // Input da tastiera (solo per tema numerico)
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!selected || completed || symbolSet !== 'numbers') return;
+      
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= gridSize) {
+        handleSymbolClick(num - 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selected, completed, symbolSet, gridSize]);
 
   const handleCellClick = (row, col) => {
     if (game.puzzle[row][col] === 0) {
@@ -463,6 +492,8 @@ const EmaSudoku = () => {
     setErrors([]);
     setCompleted(false);
     setHints(3);
+    setTimerActive(false);
+    setSeconds(0);
   };
 
   const handleHint = () => {
@@ -475,22 +506,41 @@ const EmaSudoku = () => {
     }
   };
 
+  const formatTime = (secs) => {
+    const mins = Math.floor(secs / 60);
+    const remainingSecs = secs % 60;
+    return `${mins}:${remainingSecs.toString().padStart(2, '0')}`;
+  };
+
   const getSymbol = (num) => {
     if (num === 0) return '';
     return symbolSets[symbolSet][gridSize][num - 1];
   };
 
-  const getBlockBorder = (row, col) => {
+  const getCellBorderClasses = (row, col) => {
     const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
     const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
     
     const currentStyle = colorStyles[currentColorStyle][darkMode ? 'dark' : 'light'];
     let classes = '';
     
-    if (col % blockCols === 0 && col !== 0) classes += `border-l-2 ${currentStyle.block} `;
-    if (row % blockRows === 0 && row !== 0) classes += `border-t-2 ${currentStyle.block} `;
+    // Bordi sottili di default (destra e basso)
+    if (col < gridSize - 1) classes += `border-r ${currentStyle.cell} `;
+    if (row < gridSize - 1) classes += `border-b ${currentStyle.cell} `;
+    
+    // Bordi medi per i blocchi (sovrascrivono quelli sottili)
+    if (col < gridSize - 1 && (col + 1) % blockCols === 0) {
+      classes += `border-r-2 ${currentStyle.block} `;
+    }
+    if (row < gridSize - 1 && (row + 1) % blockRows === 0) {
+      classes += `border-b-2 ${currentStyle.block} `;
+    }
     
     return classes;
+  };
+
+  const getBlockBorder = (row, col) => {
+    return ''; // Non più necessario
   };
 
   const currentStyle = colorStyles[currentColorStyle][darkMode ? 'dark' : 'light'];
@@ -508,7 +558,21 @@ const EmaSudoku = () => {
           <h1 className="text-5xl font-black tracking-tight flex items-center gap-3" style={{ fontFamily: '"Righteous", sans-serif' }}>
             Ema Sudoku 🥷
           </h1>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => setTimerActive(!timerActive)}
+              className={`p-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors ${
+                timerActive ? (darkMode ? 'bg-blue-900 border-blue-500' : 'bg-blue-100 border-blue-500') : cardBg
+              }`}
+              title={timerActive ? "Ferma timer" : "Avvia timer"}
+            >
+              <Timer size={24} />
+            </button>
+            {timerActive && (
+              <div className={`px-3 py-1 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold`}>
+                {formatTime(seconds)}
+              </div>
+            )}
             <button
               onClick={() => setShowInfo(!showInfo)}
               className={`p-2 rounded-lg ${cardBg} border ${borderColor} ${hoverBg} transition-colors`}
@@ -537,6 +601,11 @@ const EmaSudoku = () => {
             <p className="text-sm opacity-90">
               Completa la griglia inserendo i simboli in modo che ogni riga, colonna e blocco contenga tutti i simboli una sola volta. 
               Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.
+              {symbolSet === 'numbers' && (
+                <span className="block mt-2 font-semibold">
+                  💡 Suggerimento: Con il tema Numerico puoi usare la tastiera per inserire i numeri più velocemente!
+                </span>
+              )}
             </p>
           </div>
         )}
@@ -654,12 +723,11 @@ const EmaSudoku = () => {
                       disabled={isFixed || completed}
                       className={`
                         aspect-square flex items-center justify-center
-                        border ${currentStyle.cell}
+                        ${getCellBorderClasses(rowIndex, colIndex)}
                         ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
                         ${!isFixed && !completed ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'}
                         ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
                         ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
-                        ${getBlockBorder(rowIndex, colIndex)}
                         transition-all duration-150
                         ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
                         font-bold
