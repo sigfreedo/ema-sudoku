@@ -95,6 +95,8 @@ const EmaSudoku = () => {
         grid: 'border-gray-800',
         block: 'border-gray-400',
         cell: 'border-gray-300',
+        lineBlock: '#9ca3af', // gray-400
+        lineCell: '#d1d5db', // gray-300
         cellBg: 'bg-white',
         fixedBg: 'bg-gray-100',
         selected: 'ring-blue-500',
@@ -105,6 +107,8 @@ const EmaSudoku = () => {
         grid: 'border-gray-400',
         block: 'border-gray-600',
         cell: 'border-gray-700',
+        lineBlock: '#4b5563', // gray-600
+        lineCell: '#374151', // gray-700
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-blue-400',
@@ -118,6 +122,8 @@ const EmaSudoku = () => {
         grid: 'border-green-700',
         block: 'border-green-500',
         cell: 'border-green-200',
+        lineBlock: '#22c55e',
+        lineCell: '#bbf7d0',
         cellBg: 'bg-green-50',
         fixedBg: 'bg-green-100',
         selected: 'ring-emerald-500',
@@ -128,6 +134,8 @@ const EmaSudoku = () => {
         grid: 'border-emerald-400',
         block: 'border-emerald-600',
         cell: 'border-emerald-800',
+        lineBlock: '#059669',
+        lineCell: '#064e3b',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-emerald-400',
@@ -141,6 +149,8 @@ const EmaSudoku = () => {
         grid: 'border-amber-700',
         block: 'border-amber-500',
         cell: 'border-amber-200',
+        lineBlock: '#f59e0b',
+        lineCell: '#fde68a',
         cellBg: 'bg-amber-50',
         fixedBg: 'bg-amber-100',
         selected: 'ring-yellow-500',
@@ -151,6 +161,8 @@ const EmaSudoku = () => {
         grid: 'border-yellow-500',
         block: 'border-yellow-600',
         cell: 'border-yellow-800',
+        lineBlock: '#ca8a04',
+        lineCell: '#713f12',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-yellow-400',
@@ -164,6 +176,8 @@ const EmaSudoku = () => {
         grid: 'border-orange-600',
         block: 'border-orange-400',
         cell: 'border-orange-200',
+        lineBlock: '#fb923c',
+        lineCell: '#fed7aa',
         cellBg: 'bg-orange-50',
         fixedBg: 'bg-orange-100',
         selected: 'ring-red-500',
@@ -174,6 +188,8 @@ const EmaSudoku = () => {
         grid: 'border-orange-400',
         block: 'border-orange-600',
         cell: 'border-orange-800',
+        lineBlock: '#ea580c',
+        lineCell: '#7c2d12',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-orange-400',
@@ -187,6 +203,8 @@ const EmaSudoku = () => {
         grid: 'border-purple-600',
         block: 'border-purple-400',
         cell: 'border-purple-200',
+        lineBlock: '#a78bfa',
+        lineCell: '#e9d5ff',
         cellBg: 'bg-purple-50',
         fixedBg: 'bg-purple-100',
         selected: 'ring-pink-500',
@@ -197,6 +215,8 @@ const EmaSudoku = () => {
         grid: 'border-purple-400',
         block: 'border-purple-600',
         cell: 'border-purple-800',
+        lineBlock: '#7c3aed',
+        lineCell: '#581c87',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-purple-400',
@@ -210,6 +230,8 @@ const EmaSudoku = () => {
         grid: 'border-blue-700',
         block: 'border-blue-500',
         cell: 'border-blue-200',
+        lineBlock: '#3b82f6',
+        lineCell: '#bfdbfe',
         cellBg: 'bg-blue-50',
         fixedBg: 'bg-blue-100',
         selected: 'ring-sky-500',
@@ -220,6 +242,8 @@ const EmaSudoku = () => {
         grid: 'border-sky-400',
         block: 'border-sky-600',
         cell: 'border-sky-800',
+        lineBlock: '#0284c7',
+        lineCell: '#075985',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-sky-400',
@@ -233,6 +257,8 @@ const EmaSudoku = () => {
         grid: 'border-lime-700',
         block: 'border-lime-500',
         cell: 'border-lime-200',
+        lineBlock: '#84cc16',
+        lineCell: '#d9f99d',
         cellBg: 'bg-lime-50',
         fixedBg: 'bg-lime-100',
         selected: 'ring-green-500',
@@ -243,6 +269,8 @@ const EmaSudoku = () => {
         grid: 'border-lime-400',
         block: 'border-lime-600',
         cell: 'border-lime-800',
+        lineBlock: '#65a30d',
+        lineCell: '#3f6212',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-lime-400',
@@ -256,6 +284,8 @@ const EmaSudoku = () => {
         grid: 'border-pink-600',
         block: 'border-pink-400',
         cell: 'border-pink-200',
+        lineBlock: '#f472b6',
+        lineCell: '#fbcfe8',
         cellBg: 'bg-pink-50',
         fixedBg: 'bg-pink-100',
         selected: 'ring-rose-500',
@@ -266,6 +296,8 @@ const EmaSudoku = () => {
         grid: 'border-pink-400',
         block: 'border-pink-600',
         cell: 'border-pink-800',
+        lineBlock: '#db2777',
+        lineCell: '#831843',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-pink-400',
@@ -279,6 +311,8 @@ const EmaSudoku = () => {
         grid: 'border-rose-700',
         block: 'border-rose-500',
         cell: 'border-rose-200',
+        lineBlock: '#f43f5e',
+        lineCell: '#fecdd3',
         cellBg: 'bg-rose-50',
         fixedBg: 'bg-rose-100',
         selected: 'ring-pink-500',
@@ -289,6 +323,8 @@ const EmaSudoku = () => {
         grid: 'border-rose-400',
         block: 'border-rose-600',
         cell: 'border-rose-800',
+        lineBlock: '#e11d48',
+        lineCell: '#881337',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-rose-400',
@@ -302,6 +338,8 @@ const EmaSudoku = () => {
         grid: 'border-indigo-700',
         block: 'border-indigo-500',
         cell: 'border-indigo-200',
+        lineBlock: '#6366f1',
+        lineCell: '#c7d2fe',
         cellBg: 'bg-indigo-50',
         fixedBg: 'bg-indigo-100',
         selected: 'ring-violet-500',
@@ -312,6 +350,8 @@ const EmaSudoku = () => {
         grid: 'border-indigo-400',
         block: 'border-indigo-600',
         cell: 'border-indigo-800',
+        lineBlock: '#4f46e5',
+        lineCell: '#3730a3',
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-indigo-400',
@@ -685,58 +725,85 @@ const EmaSudoku = () => {
         {/* Griglia Sudoku */}
         <div className="flex justify-center mb-6">
           <div className={`inline-block ${cardBg} p-2 sm:p-4 rounded-lg shadow-lg w-full max-w-5xl`}>
+            {/* Contenitore esterno con bordo più spesso */}
             <div 
-              className={`border-[3px] ${currentStyle.grid} mx-auto p-[2px] ${currentStyle.grid}`}
+              className={`border-[3px] ${currentStyle.grid} mx-auto overflow-hidden rounded-sm`}
               style={{ 
                 maxWidth: gridSize === 9 ? '640px' : gridSize === 6 ? '560px' : '480px',
                 width: '100%'
               }}
             >
+              {/* Grid di blocchi con gap per le linee di livello 2 */}
               <div 
-                className={`grid ${currentStyle.cell}`}
+                className="grid"
                 style={{ 
-                  gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-                  gap: '1px'
+                  gridTemplateColumns: gridSize === 4 ? 'repeat(2, 1fr)' : gridSize === 6 ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
+                  gridTemplateRows: gridSize === 4 ? 'repeat(2, 1fr)' : gridSize === 6 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+                  gap: '2px',
+                  backgroundColor: currentStyle.lineBlock
                 }}
               >
-                {board.map((row, rowIndex) => (
-                  row.map((cell, colIndex) => {
-                    const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
-                    const isInSameRow = selected?.row === rowIndex;
-                    const isInSameCol = selected?.col === colIndex;
-                    const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
-                    const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
-                    const isError = errors.includes(`${rowIndex}-${colIndex}`);
-                    
-                    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
-                    const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
-                    const isBlockBoundaryRight = (colIndex + 1) % blockCols === 0 && colIndex < gridSize - 1;
-                    const isBlockBoundaryBottom = (rowIndex + 1) % blockRows === 0 && rowIndex < gridSize - 1;
-                    
-                    return (
-                      <button
-                        key={`${rowIndex}-${colIndex}`}
-                        onClick={() => handleCellClick(rowIndex, colIndex)}
-                        disabled={completed}
-                        className={`
-                          aspect-square flex items-center justify-center
-                          ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
-                          ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
-                          ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
-                          ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
-                          ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
-                          ${isBlockBoundaryRight ? `border-r-2 ${currentStyle.block}` : ''}
-                          ${isBlockBoundaryBottom ? `border-b-2 ${currentStyle.block}` : ''}
-                          transition-all duration-150
-                          ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
-                          font-bold
-                        `}
-                      >
-                        {getSymbol(cell)}
-                      </button>
-                    );
-                  })
-                ))}
+                {/* Genera i blocchi */}
+                {Array.from({ 
+                  length: gridSize === 4 ? 4 : gridSize === 6 ? 6 : 9 
+                }).map((_, blockIndex) => {
+                  const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
+                  const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+                  const blocksPerRow = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+                  
+                  const blockRow = Math.floor(blockIndex / blocksPerRow);
+                  const blockCol = blockIndex % blocksPerRow;
+                  
+                  return (
+                    <div 
+                      key={blockIndex}
+                      className="grid"
+                      style={{
+                        gridTemplateColumns: `repeat(${blockCols}, 1fr)`,
+                        gridTemplateRows: `repeat(${blockRows}, 1fr)`,
+                        gap: '1px',
+                        backgroundColor: currentStyle.lineCell
+                      }}
+                    >
+                      {/* Celle all'interno del blocco */}
+                      {Array.from({ length: blockRows * blockCols }).map((_, cellIndex) => {
+                        const cellRow = Math.floor(cellIndex / blockCols);
+                        const cellCol = cellIndex % blockCols;
+                        const rowIndex = blockRow * blockRows + cellRow;
+                        const colIndex = blockCol * blockCols + cellCol;
+                        const cell = board[rowIndex][colIndex];
+                        
+                        const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
+                        const isInSameRow = selected?.row === rowIndex;
+                        const isInSameCol = selected?.col === colIndex;
+                        const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
+                        const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
+                        const isError = errors.includes(`${rowIndex}-${colIndex}`);
+                        
+                        return (
+                          <button
+                            key={`${rowIndex}-${colIndex}`}
+                            onClick={() => handleCellClick(rowIndex, colIndex)}
+                            disabled={completed}
+                            className={`
+                              aspect-square flex items-center justify-center
+                              ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
+                              ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
+                              ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
+                              ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
+                              ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
+                              transition-all duration-150
+                              ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
+                              font-bold
+                            `}
+                          >
+                            {getSymbol(cell)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
