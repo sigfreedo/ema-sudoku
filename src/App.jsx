@@ -769,23 +769,25 @@ const EmaSudoku = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-bold text-xl">Come si gioca</h3>
+                  <h3 className="font-bold text-xl">Benvenuto in Ema Sudoku!</h3>
                   <button onClick={() => setShowInfo(false)} className={`p-1 rounded-lg ${hoverBg} transition-colors`}>
                     <X size={20} />
                   </button>
                 </div>
-                <p className="text-sm opacity-90">
-                  Completa la griglia inserendo i simboli in modo che ogni riga, colonna e blocco contenga tutti i simboli una sola volta. 
-                  Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.
-                  {symbolSet === 'numbers' && (
-                    <span className="block mt-2 font-semibold">
-                      💡 Suggerimento: Con il tema Numerico puoi usare la tastiera per inserire i numeri più velocemente!
-                    </span>
-                  )}
-                  <span className="block mt-2 font-semibold">
-                    ⌫ Premi Backspace o Delete per annullare l'ultima mossa!
-                  </span>
-                </p>
+                <div className="text-sm opacity-90 space-y-3">
+                  <p>
+                    Ema Sudoku nasce per avvicinare i bambini a questo celebre rompicapo e farli impratichire nella risoluzione. Scegli le dimensioni della griglia, il livello di difficoltà e il tema che preferisci e divertiti con i tuoi bimbi a completare il puzzle.
+                  </p>
+                  <p>
+                    Come nel sudoku classico, i simboli vanno inseriti in modo che ogni riga, colonna e blocco contenga ciascun simbolo una sola volta. Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.
+                  </p>
+                  <p className="font-semibold">
+                    💡 Suggerimento: se giochi con il tema numerico, puoi cliccare sui numeri della tastiera per inserire i simboli nelle caselle più velocemente. Premi Backspace o Delete per annullare l'ultima mossa!
+                  </p>
+                  <p className="text-xs opacity-70 pt-2 border-t border-current/20">
+                    Il progetto è sviluppato unicamente per finalità educative, è totalmente open e rilasciato con licenza MIT.
+                  </p>
+                </div>
               </div>
             </div>
           </>
@@ -812,160 +814,155 @@ const EmaSudoku = () => {
                     <X size={20} />
                   </button>
                 </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Dimensione griglia */}
+                <div className="space-y-6 text-sm">
+              
+              {/* Dimensione griglia con mini-grids visive */}
               <div>
-                <label className="block font-semibold mb-2">Dimensione Griglia</label>
-                <div className="flex gap-2">
-                  {[4, 6, 9].map(size => (
+                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Dimensione Griglia</label>
+                <div className="flex gap-3 justify-center">
+                  {[
+                    { size: 4, grid: '┌─┬─┐\n│ │ │\n├─┼─┤\n│ │ │\n└─┴─┘' },
+                    { size: 6, grid: '┌──┬──┬──┐\n│  │  │  │\n├──┼──┼──┤\n│  │  │  │\n└──┴──┴──┘' },
+                    { size: 9, grid: '┌──┬──┬──┐\n│  │  │  │\n├──┼──┼──┤\n│  │  │  │\n├──┼──┼──┤\n│  │  │  │\n└──┴──┴──┘' }
+                  ].map(({ size, grid }) => (
                     <button
                       key={size}
                       onClick={() => setGridSize(size)}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                      className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                         gridSize === size 
-                          ? `${darkMode ? 'border-blue-500 bg-blue-900' : 'border-blue-500 bg-blue-50'}` 
+                          ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}` 
                           : `${borderColor} ${hoverBg}`
                       }`}
                     >
-                      {size}×{size}
+                      <pre className="text-[8px] leading-tight opacity-60 whitespace-pre">{grid}</pre>
+                      <span className="text-xs font-bold">{size}×{size}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Temi */}
+              {/* Difficoltà con slider ed emoji */}
               <div>
-                <label className="block font-semibold mb-2">Tema</label>
-                <select
-                  value={symbolSet}
-                  onChange={(e) => setSymbolSet(e.target.value)}
-                  className={`w-full px-4 py-2 rounded-lg border ${borderColor} ${cardBg} ${textColor}`}
-                >
-                  <option value="numbers">{symbolSets.numbers.name}</option>
-                  <option value="animals">{symbolSets.animals.name}</option>
-                  <option value="dinosaurs">{symbolSets.dinosaurs.name}</option>
-                  <option value="fruits">{symbolSets.fruits.name}</option>
-                  <option value="shapes">{symbolSets.shapes.name}</option>
-                  <option value="sports">{symbolSets.sports.name}</option>
-                  <option value="vegetables">{symbolSets.vegetables.name}</option>
-                  <option value="desserts">{symbolSets.desserts.name}</option>
-                  <option value="flowers">{symbolSets.flowers.name}</option>
-                  <option value="monsters">{symbolSets.monsters.name}</option>
-                </select>
+                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Livello di Difficoltà</label>
+                <div className="flex items-center gap-4">
+                  {['easy', 'medium', 'hard'].map((level, idx) => {
+                    const emoji = level === 'easy' ? '😊' : level === 'medium' ? '🤔' : '😰';
+                    const label = level === 'easy' ? 'Facile' : level === 'medium' ? 'Medio' : 'Difficile';
+                    return (
+                      <button
+                        key={level}
+                        onClick={() => setDifficulty(level)}
+                        className={`flex-1 flex flex-col items-center gap-1 px-3 py-2 rounded-lg border-2 transition-all ${
+                          difficulty === level
+                            ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
+                            : `${borderColor} ${hoverBg}`
+                        }`}
+                      >
+                        <span className="text-2xl">{emoji}</span>
+                        <span className="text-xs font-semibold">{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Difficoltà */}
+              {/* Temi con icone circolari */}
               <div>
-                <label className="block font-semibold mb-2">Difficoltà</label>
-                <div className="flex gap-2">
-                  {['easy', 'medium', 'hard'].map(level => (
+                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Tema</label>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {[
+                    { key: 'numbers', icon: '🔢', name: 'Numerico', color: 'bg-gray-500/70' },
+                    { key: 'animals', icon: '🐾', name: 'Animalesco', color: 'bg-amber-600/70' },
+                    { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', color: 'bg-green-600/70' },
+                    { key: 'fruits', icon: '🍎', name: 'Fruttoso', color: 'bg-orange-500/70' },
+                    { key: 'shapes', icon: '⬛', name: 'Geometrico', color: 'bg-purple-500/70' },
+                    { key: 'sports', icon: '⚽', name: 'Sportivo', color: 'bg-blue-600/70' },
+                    { key: 'vegetables', icon: '🥕', name: 'Vegetale', color: 'bg-lime-600/70' },
+                    { key: 'desserts', icon: '🍰', name: 'Goloso', color: 'bg-pink-500/70' },
+                    { key: 'flowers', icon: '🌸', name: 'Fiorito', color: 'bg-rose-500/70' },
+                    { key: 'monsters', icon: '👻', name: 'Mostruoso', color: 'bg-indigo-600/70' }
+                  ].map(({ key, icon, name, color }) => (
                     <button
-                      key={level}
-                      onClick={() => setDifficulty(level)}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all flex-1 ${
-                        difficulty === level 
-                          ? `${darkMode ? 'border-blue-500 bg-blue-900' : 'border-blue-500 bg-blue-50'}` 
-                          : `${borderColor} ${hoverBg}`
+                      key={key}
+                      onClick={() => setSymbolSet(key)}
+                      className={`flex flex-col items-center gap-1 p-2 rounded-lg border-2 transition-all ${
+                        symbolSet === key
+                          ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
+                          : `border-transparent hover:border-gray-400`
                       }`}
                     >
-                      {level === 'easy' ? 'Facile' : level === 'medium' ? 'Medio' : 'Difficile'}
+                      <div className={`w-10 h-10 rounded-full ${color} flex items-center justify-center text-xl border-2 border-white/30`}>
+                        {icon}
+                      </div>
+                      <span className="text-[10px] font-medium">{name}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Dark Mode Toggle */}
+              {/* Dark Mode con sole/luna */}
               <div>
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="font-semibold">Modalità Scura</span>
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={darkMode}
-                      onChange={(e) => setDarkMode(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className={`w-14 h-7 rounded-full transition-colors ${
-                      darkMode ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}></div>
-                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                      darkMode ? 'translate-x-7' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                </label>
+                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Modalità</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setDarkMode(false)}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
+                      !darkMode
+                        ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
+                        : `${borderColor} ${hoverBg}`
+                    }`}
+                  >
+                    <span className="text-lg">☀️</span>
+                    <span className="text-xs font-semibold">Chiaro</span>
+                  </button>
+                  <button
+                    onClick={() => setDarkMode(true)}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
+                      darkMode
+                        ? `border-blue-500 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`
+                        : `${borderColor} ${hoverBg}`
+                    }`}
+                  >
+                    <span className="text-lg">🌙</span>
+                    <span className="text-xs font-semibold">Scuro</span>
+                  </button>
+                </div>
               </div>
 
-              {/* Nascondi Elementi Completati Toggle */}
+              {/* Ultimi 3 toggle compatti in riga */}
               <div>
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="font-semibold">Nascondi Completati</span>
-                  <div className="relative">
+                <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Aiuti</label>
+                <div className="flex flex-wrap gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={hideCompleted}
                       onChange={(e) => setHideCompleted(e.target.checked)}
-                      className="sr-only peer"
+                      className="w-4 h-4 rounded border-gray-300"
                     />
-                    <div className={`w-14 h-7 rounded-full transition-colors ${
-                      hideCompleted ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}></div>
-                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                      hideCompleted ? 'translate-x-7' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                </label>
-                <p className="text-xs opacity-70 mt-1">
-                  Disabilita i simboli già inseriti {gridSize} volte
-                </p>
-              </div>
-
-              {/* Mostra Errori Toggle */}
-              <div>
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="font-semibold">Evidenzia Errori</span>
-                  <div className="relative">
+                    <span className="text-xs">Nascondi Completati</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={showErrors}
                       onChange={(e) => setShowErrors(e.target.checked)}
-                      className="sr-only peer"
+                      className="w-4 h-4 rounded border-gray-300"
                     />
-                    <div className={`w-14 h-7 rounded-full transition-colors ${
-                      showErrors ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}></div>
-                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                      showErrors ? 'translate-x-7' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                </label>
-                <p className="text-xs opacity-70 mt-1">
-                  Mostra feedback rosso per errori
-                </p>
-              </div>
-
-              {/* Filtro Intelligente Toggle */}
-              <div>
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="font-semibold">Filtro Intelligente</span>
-                  <div className="relative">
+                    <span className="text-xs">Evidenzia Errori</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={smartFilter}
                       onChange={(e) => setSmartFilter(e.target.checked)}
-                      className="sr-only peer"
+                      className="w-4 h-4 rounded border-gray-300"
                     />
-                    <div className={`w-14 h-7 rounded-full transition-colors ${
-                      smartFilter ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}></div>
-                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                      smartFilter ? 'translate-x-7' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                </label>
-                <p className="text-xs opacity-70 mt-1">
-                  Mostra solo simboli validi per la casella
-                </p>
+                    <span className="text-xs">Filtro Intelligente</span>
+                  </label>
+                </div>
               </div>
+
             </div>
               </div>
             </div>
@@ -1191,6 +1188,21 @@ const EmaSudoku = () => {
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <footer className="mt-12 mb-6 text-center">
+          <p className="text-sm opacity-70 mb-2">
+            Fatto con ❤️ per Ema da papà
+          </p>
+          <a 
+            href="https://github.com/sigfreedo/ema-sudoku" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs opacity-60 hover:opacity-100 transition-opacity underline"
+          >
+            github.com/sigfreedo/ema-sudoku
+          </a>
+        </footer>
       </div>
 
       <style>{`
