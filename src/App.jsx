@@ -737,8 +737,17 @@ const EmaSudoku = () => {
               <div 
                 className="grid"
                 style={{ 
-                  gridTemplateColumns: gridSize === 4 ? 'repeat(2, 1fr)' : gridSize === 6 ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
-                  gridTemplateRows: gridSize === 4 ? 'repeat(2, 1fr)' : gridSize === 6 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+                  gridTemplateColumns: (() => {
+                    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
+                    const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+                    const totalBlockCols = gridSize / blockCols;
+                    return `repeat(${totalBlockCols}, 1fr)`;
+                  })(),
+                  gridTemplateRows: (() => {
+                    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
+                    const totalBlockRows = gridSize / blockRows;
+                    return `repeat(${totalBlockRows}, 1fr)`;
+                  })(),
                   gap: '2px',
                   backgroundColor: currentStyle.lineBlock
                 }}
