@@ -577,11 +577,11 @@ const EmaSudoku = () => {
     <div className={`min-h-screen ${bgColor} ${textColor} p-4 sm:p-8 transition-colors duration-300`}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 gap-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl font-black tracking-tight flex items-center gap-3 flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight flex items-center gap-3 flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
             Ema Sudoku 🥷
           </h1>
-          <div className="flex gap-2 items-center flex-shrink-0">
+          <div className="flex gap-2 items-center flex-shrink-0 flex-wrap justify-center">
             <button
               onClick={() => setTimerActive(!timerActive)}
               className={`p-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors ${
@@ -733,89 +733,85 @@ const EmaSudoku = () => {
                 width: '100%'
               }}
             >
-              {/* Grid di blocchi con gap per le linee di livello 2 */}
-              <div 
-                className="grid"
-                style={{ 
-                  gridTemplateColumns: (() => {
-                    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
-                    const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
-                    const totalBlockCols = gridSize / blockCols;
-                    return `repeat(${totalBlockCols}, 1fr)`;
-                  })(),
-                  gridTemplateRows: (() => {
-                    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
-                    const totalBlockRows = gridSize / blockRows;
-                    return `repeat(${totalBlockRows}, 1fr)`;
-                  })(),
-                  gap: '2px',
-                  backgroundColor: currentStyle.lineBlock
-                }}
-              >
-                {/* Genera i blocchi */}
-                {(() => {
-                  const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
-                  const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
-                  const totalBlockRows = gridSize / blockRows;
-                  const totalBlockCols = gridSize / blockCols;
-                  const totalBlocks = totalBlockRows * totalBlockCols;
-                  
-                  return Array.from({ length: totalBlocks }).map((_, blockIndex) => {
-                    const blockRow = Math.floor(blockIndex / totalBlockCols);
-                    const blockCol = blockIndex % totalBlockCols;
-                    
-                    return (
-                      <div 
-                        key={blockIndex}
-                        className="grid"
-                        style={{
-                          gridTemplateColumns: `repeat(${blockCols}, 1fr)`,
-                          gridTemplateRows: `repeat(${blockRows}, 1fr)`,
-                          gap: '1px',
-                          backgroundColor: currentStyle.lineCell
-                        }}
-                      >
-                        {/* Celle all'interno del blocco */}
-                        {Array.from({ length: blockRows * blockCols }).map((_, cellIndex) => {
-                          const cellRow = Math.floor(cellIndex / blockCols);
-                          const cellCol = cellIndex % blockCols;
-                          const rowIndex = blockRow * blockRows + cellRow;
-                          const colIndex = blockCol * blockCols + cellCol;
-                          const cell = board[rowIndex][colIndex];
-                          
-                          const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
-                          const isInSameRow = selected?.row === rowIndex;
-                          const isInSameCol = selected?.col === colIndex;
-                          const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
-                          const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
-                          const isError = errors.includes(`${rowIndex}-${colIndex}`);
-                          
-                          return (
-                            <button
-                              key={`${rowIndex}-${colIndex}`}
-                              onClick={() => handleCellClick(rowIndex, colIndex)}
-                              disabled={completed}
-                              className={`
-                                aspect-square flex items-center justify-center
-                                ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
-                                ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
-                                ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
-                                ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
-                                ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
-                                transition-all duration-150
-                                ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
-                                font-bold
-                              `}
-                            >
-                              {getSymbol(cell)}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    );
-                  });
-                })()}
-              </div>
+              {(() => {
+                // Definizione blocchi per ogni tipo di griglia
+                const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
+                const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+                const totalBlockRows = gridSize / blockRows;
+                const totalBlockCols = gridSize / blockCols;
+                const totalBlocks = totalBlockRows * totalBlockCols;
+                
+                return (
+                  <div 
+                    className="grid"
+                    style={{ 
+                      gridTemplateColumns: `repeat(${totalBlockCols}, 1fr)`,
+                      gridTemplateRows: `repeat(${totalBlockRows}, 1fr)`,
+                      gap: '2px',
+                      backgroundColor: currentStyle.lineBlock
+                    }}
+                  >
+                    {Array.from({ length: totalBlocks }).map((_, blockIndex) => {
+                      const blockRow = Math.floor(blockIndex / totalBlockCols);
+                      const blockCol = blockIndex % totalBlockCols;
+                      
+                      return (
+                        <div 
+                          key={blockIndex}
+                          className="grid"
+                          style={{
+                            gridTemplateColumns: `repeat(${blockCols}, 1fr)`,
+                            gridTemplateRows: `repeat(${blockRows}, 1fr)`,
+                            gap: '1px',
+                            backgroundColor: currentStyle.lineCell
+                          }}
+                        >
+                          {Array.from({ length: blockRows * blockCols }).map((_, cellIndex) => {
+                            const cellRow = Math.floor(cellIndex / blockCols);
+                            const cellCol = cellIndex % blockCols;
+                            const rowIndex = blockRow * blockRows + cellRow;
+                            const colIndex = blockCol * blockCols + cellCol;
+                            
+                            // Safety check
+                            if (!board[rowIndex] || board[rowIndex][colIndex] === undefined) {
+                              return null;
+                            }
+                            
+                            const cell = board[rowIndex][colIndex];
+                            const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
+                            const isInSameRow = selected?.row === rowIndex;
+                            const isInSameCol = selected?.col === colIndex;
+                            const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
+                            const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
+                            const isError = errors.includes(`${rowIndex}-${colIndex}`);
+                            
+                            return (
+                              <button
+                                key={`${rowIndex}-${colIndex}`}
+                                onClick={() => handleCellClick(rowIndex, colIndex)}
+                                disabled={completed}
+                                className={`
+                                  aspect-square flex items-center justify-center
+                                  ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
+                                  ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
+                                  ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
+                                  ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
+                                  ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
+                                  transition-all duration-150
+                                  ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
+                                  font-bold
+                                `}
+                              >
+                                {getSymbol(cell)}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
