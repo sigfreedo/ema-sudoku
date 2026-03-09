@@ -452,6 +452,7 @@ const EmaSudoku = () => {
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (!selected || completed || symbolSet !== 'numbers') return;
+      if (game.puzzle[selected.row][selected.col] !== 0) return; // Non permettere input su celle fisse
       
       const num = parseInt(e.key);
       if (num >= 1 && num <= gridSize) {
@@ -461,16 +462,15 @@ const EmaSudoku = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selected, completed, symbolSet, gridSize]);
+  }, [selected, completed, symbolSet, gridSize, game.puzzle]);
 
   const handleCellClick = (row, col) => {
-    if (game.puzzle[row][col] === 0) {
-      setSelected({ row, col });
-    }
+    // Permetti selezione anche di celle fisse (per aiutare visivamente)
+    setSelected({ row, col });
   };
 
   const handleSymbolClick = (symbolIndex) => {
-    if (selected) {
+    if (selected && game.puzzle[selected.row][selected.col] === 0) {
       const newBoard = board.map(row => [...row]);
       newBoard[selected.row][selected.col] = symbolIndex + 1;
       setBoard(newBoard);
@@ -497,7 +497,7 @@ const EmaSudoku = () => {
   };
 
   const handleHint = () => {
-    if (hints > 0 && selected && board[selected.row][selected.col] === 0) {
+    if (hints > 0 && selected && game.puzzle[selected.row][selected.col] === 0 && board[selected.row][selected.col] === 0) {
       const newBoard = board.map(row => [...row]);
       newBoard[selected.row][selected.col] = game.solution[selected.row][selected.col];
       setBoard(newBoard);
@@ -518,29 +518,12 @@ const EmaSudoku = () => {
   };
 
   const getCellBorderClasses = (row, col) => {
-    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
-    const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
-    
-    const currentStyle = colorStyles[currentColorStyle][darkMode ? 'dark' : 'light'];
-    let classes = '';
-    
-    // Bordi sottili di default (destra e basso)
-    if (col < gridSize - 1) classes += `border-r ${currentStyle.cell} `;
-    if (row < gridSize - 1) classes += `border-b ${currentStyle.cell} `;
-    
-    // Bordi medi per i blocchi (sovrascrivono quelli sottili)
-    if (col < gridSize - 1 && (col + 1) % blockCols === 0) {
-      classes += `border-r-2 ${currentStyle.block} `;
-    }
-    if (row < gridSize - 1 && (row + 1) % blockRows === 0) {
-      classes += `border-b-2 ${currentStyle.block} `;
-    }
-    
-    return classes;
+    // Non usiamo più bordi sulle celle, usiamo gap con sfondo colorato
+    return '';
   };
 
   const getBlockBorder = (row, col) => {
-    return ''; // Non più necessario
+    return '';
   };
 
   const currentStyle = colorStyles[currentColorStyle][darkMode ? 'dark' : 'light'];
@@ -703,41 +686,58 @@ const EmaSudoku = () => {
         <div className="flex justify-center mb-6">
           <div className={`inline-block ${cardBg} p-2 sm:p-4 rounded-lg shadow-lg w-full max-w-5xl`}>
             <div 
-              className={`grid gap-0 border-2 ${currentStyle.grid} mx-auto`}
+              className={`border-[3px] ${currentStyle.grid} mx-auto p-[2px] ${currentStyle.grid}`}
               style={{ 
-                gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
                 maxWidth: gridSize === 9 ? '640px' : gridSize === 6 ? '560px' : '480px',
                 width: '100%'
               }}
             >
-              {board.map((row, rowIndex) => (
-                row.map((cell, colIndex) => {
-                  const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
-                  const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
-                  const isError = errors.includes(`${rowIndex}-${colIndex}`);
-                  
-                  return (
-                    <button
-                      key={`${rowIndex}-${colIndex}`}
-                      onClick={() => handleCellClick(rowIndex, colIndex)}
-                      disabled={isFixed || completed}
-                      className={`
-                        aspect-square flex items-center justify-center
-                        ${getCellBorderClasses(rowIndex, colIndex)}
-                        ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
-                        ${!isFixed && !completed ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'}
-                        ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
-                        ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
-                        transition-all duration-150
-                        ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
-                        font-bold
-                      `}
-                    >
-                      {getSymbol(cell)}
-                    </button>
-                  );
-                })
-              ))}
+              <div 
+                className={`grid ${currentStyle.cell}`}
+                style={{ 
+                  gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
+                  gap: '1px'
+                }}
+              >
+                {board.map((row, rowIndex) => (
+                  row.map((cell, colIndex) => {
+                    const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
+                    const isInSameRow = selected?.row === rowIndex;
+                    const isInSameCol = selected?.col === colIndex;
+                    const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
+                    const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
+                    const isError = errors.includes(`${rowIndex}-${colIndex}`);
+                    
+                    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
+                    const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+                    const isBlockBoundaryRight = (colIndex + 1) % blockCols === 0 && colIndex < gridSize - 1;
+                    const isBlockBoundaryBottom = (rowIndex + 1) % blockRows === 0 && rowIndex < gridSize - 1;
+                    
+                    return (
+                      <button
+                        key={`${rowIndex}-${colIndex}`}
+                        onClick={() => handleCellClick(rowIndex, colIndex)}
+                        disabled={completed}
+                        className={`
+                          aspect-square flex items-center justify-center
+                          ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
+                          ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
+                          ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
+                          ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
+                          ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
+                          ${isBlockBoundaryRight ? `border-r-2 ${currentStyle.block}` : ''}
+                          ${isBlockBoundaryBottom ? `border-b-2 ${currentStyle.block}` : ''}
+                          transition-all duration-150
+                          ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
+                          font-bold
+                        `}
+                      >
+                        {getSymbol(cell)}
+                      </button>
+                    );
+                  })
+                ))}
+              </div>
             </div>
           </div>
         </div>
