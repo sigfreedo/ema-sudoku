@@ -103,7 +103,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-white',
         fixedBg: 'bg-gray-100',
         selected: 'ring-blue-500',
-        buttonActive: 'bg-gray-700 hover:bg-gray-800 text-white',
+        buttonActive: 'bg-gray-700/80 hover:bg-gray-800/80 text-white',
         buttonInactive: 'bg-gray-200 text-gray-400'
       },
       dark: {
@@ -115,7 +115,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-blue-400',
-        buttonActive: 'bg-gray-600 hover:bg-gray-500 text-white',
+        buttonActive: 'bg-gray-600/80 hover:bg-gray-500/80 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -130,7 +130,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-green-50',
         fixedBg: 'bg-green-100',
         selected: 'ring-emerald-500',
-        buttonActive: 'bg-green-600 hover:bg-green-700 text-white',
+        buttonActive: 'bg-green-600/70 hover:bg-green-700/70 text-white',
         buttonInactive: 'bg-green-100 text-green-300'
       },
       dark: {
@@ -142,7 +142,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-emerald-400',
-        buttonActive: 'bg-emerald-600 hover:bg-emerald-500 text-white',
+        buttonActive: 'bg-emerald-600/70 hover:bg-emerald-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -157,7 +157,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-amber-50',
         fixedBg: 'bg-amber-100',
         selected: 'ring-yellow-500',
-        buttonActive: 'bg-amber-600 hover:bg-amber-700 text-white',
+        buttonActive: 'bg-amber-600/70 hover:bg-amber-700/70 text-white',
         buttonInactive: 'bg-amber-100 text-amber-300'
       },
       dark: {
@@ -169,7 +169,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-yellow-400',
-        buttonActive: 'bg-yellow-600 hover:bg-yellow-500 text-white',
+        buttonActive: 'bg-yellow-600/70 hover:bg-yellow-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -184,7 +184,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-orange-50',
         fixedBg: 'bg-orange-100',
         selected: 'ring-red-500',
-        buttonActive: 'bg-orange-500 hover:bg-orange-600 text-white',
+        buttonActive: 'bg-orange-500/70 hover:bg-orange-600/70 text-white',
         buttonInactive: 'bg-orange-100 text-orange-300'
       },
       dark: {
@@ -196,7 +196,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-orange-400',
-        buttonActive: 'bg-orange-600 hover:bg-orange-500 text-white',
+        buttonActive: 'bg-orange-600/70 hover:bg-orange-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -211,7 +211,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-purple-50',
         fixedBg: 'bg-purple-100',
         selected: 'ring-pink-500',
-        buttonActive: 'bg-purple-500 hover:bg-purple-600 text-white',
+        buttonActive: 'bg-purple-500/70 hover:bg-purple-600/70 text-white',
         buttonInactive: 'bg-purple-100 text-purple-300'
       },
       dark: {
@@ -223,7 +223,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-purple-400',
-        buttonActive: 'bg-purple-600 hover:bg-purple-500 text-white',
+        buttonActive: 'bg-purple-600/70 hover:bg-purple-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -238,7 +238,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-blue-50',
         fixedBg: 'bg-blue-100',
         selected: 'ring-sky-500',
-        buttonActive: 'bg-blue-600 hover:bg-blue-700 text-white',
+        buttonActive: 'bg-blue-600/70 hover:bg-blue-700/70 text-white',
         buttonInactive: 'bg-blue-100 text-blue-300'
       },
       dark: {
@@ -250,7 +250,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-sky-400',
-        buttonActive: 'bg-sky-600 hover:bg-sky-500 text-white',
+        buttonActive: 'bg-sky-600/70 hover:bg-sky-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -265,7 +265,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-lime-50',
         fixedBg: 'bg-lime-100',
         selected: 'ring-green-500',
-        buttonActive: 'bg-lime-600 hover:bg-lime-700 text-white',
+        buttonActive: 'bg-lime-600/70 hover:bg-lime-700/70 text-white',
         buttonInactive: 'bg-lime-100 text-lime-300'
       },
       dark: {
@@ -277,7 +277,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-lime-400',
-        buttonActive: 'bg-lime-600 hover:bg-lime-500 text-white',
+        buttonActive: 'bg-lime-600/70 hover:bg-lime-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -292,7 +292,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-pink-50',
         fixedBg: 'bg-pink-100',
         selected: 'ring-rose-500',
-        buttonActive: 'bg-pink-500 hover:bg-pink-600 text-white',
+        buttonActive: 'bg-pink-500/70 hover:bg-pink-600/70 text-white',
         buttonInactive: 'bg-pink-100 text-pink-300'
       },
       dark: {
@@ -304,7 +304,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-pink-400',
-        buttonActive: 'bg-pink-600 hover:bg-pink-500 text-white',
+        buttonActive: 'bg-pink-600/70 hover:bg-pink-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -319,7 +319,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-rose-50',
         fixedBg: 'bg-rose-100',
         selected: 'ring-pink-500',
-        buttonActive: 'bg-rose-600 hover:bg-rose-700 text-white',
+        buttonActive: 'bg-rose-600/70 hover:bg-rose-700/70 text-white',
         buttonInactive: 'bg-rose-100 text-rose-300'
       },
       dark: {
@@ -331,7 +331,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-rose-400',
-        buttonActive: 'bg-rose-600 hover:bg-rose-500 text-white',
+        buttonActive: 'bg-rose-600/70 hover:bg-rose-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -346,7 +346,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-indigo-50',
         fixedBg: 'bg-indigo-100',
         selected: 'ring-violet-500',
-        buttonActive: 'bg-indigo-600 hover:bg-indigo-700 text-white',
+        buttonActive: 'bg-indigo-600/70 hover:bg-indigo-700/70 text-white',
         buttonInactive: 'bg-indigo-100 text-indigo-300'
       },
       dark: {
@@ -358,7 +358,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-indigo-400',
-        buttonActive: 'bg-indigo-600 hover:bg-indigo-500 text-white',
+        buttonActive: 'bg-indigo-600/70 hover:bg-indigo-500/70 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     }
@@ -701,34 +701,66 @@ const EmaSudoku = () => {
           </div>
         </div>
 
-        {/* Info Tooltip */}
+        {/* Info Modal */}
         {showInfo && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-4 mb-4 shadow-lg max-w-4xl mx-auto`}>
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-bold text-lg">Come si gioca</h3>
-              <button onClick={() => setShowInfo(false)} className={hoverBg}>
-                <X size={20} />
-              </button>
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 animate-fadeIn"
+              onClick={() => setShowInfo(false)}
+            ></div>
+            
+            {/* Modal */}
+            <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 pointer-events-none">
+              <div 
+                className={`${cardBg} border ${borderColor} rounded-lg p-6 shadow-2xl max-w-2xl w-full mx-4 pointer-events-auto animate-slideDown`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-bold text-xl">Come si gioca</h3>
+                  <button onClick={() => setShowInfo(false)} className={`p-1 rounded-lg ${hoverBg} transition-colors`}>
+                    <X size={20} />
+                  </button>
+                </div>
+                <p className="text-sm opacity-90">
+                  Completa la griglia inserendo i simboli in modo che ogni riga, colonna e blocco contenga tutti i simboli una sola volta. 
+                  Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.
+                  {symbolSet === 'numbers' && (
+                    <span className="block mt-2 font-semibold">
+                      💡 Suggerimento: Con il tema Numerico puoi usare la tastiera per inserire i numeri più velocemente!
+                    </span>
+                  )}
+                  <span className="block mt-2 font-semibold">
+                    ⌫ Premi Backspace o Delete per annullare l'ultima mossa!
+                  </span>
+                </p>
+              </div>
             </div>
-            <p className="text-sm opacity-90">
-              Completa la griglia inserendo i simboli in modo che ogni riga, colonna e blocco contenga tutti i simboli una sola volta. 
-              Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.
-              {symbolSet === 'numbers' && (
-                <span className="block mt-2 font-semibold">
-                  💡 Suggerimento: Con il tema Numerico puoi usare la tastiera per inserire i numeri più velocemente!
-                </span>
-              )}
-              <span className="block mt-2 font-semibold">
-                ⌫ Premi Backspace o Delete per annullare l'ultima mossa!
-              </span>
-            </p>
-          </div>
+          </>
         )}
 
-        {/* Pannello Impostazioni */}
+        {/* Settings Modal */}
         {showSettings && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-6 mb-6 shadow-lg max-w-4xl mx-auto`}>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 animate-fadeIn"
+              onClick={() => setShowSettings(false)}
+            ></div>
+            
+            {/* Modal */}
+            <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 pointer-events-none overflow-y-auto">
+              <div 
+                className={`${cardBg} border ${borderColor} rounded-lg p-6 shadow-2xl max-w-4xl w-full mx-4 my-4 pointer-events-auto animate-slideDown`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <h3 className="font-bold text-xl">Impostazioni</h3>
+                  <button onClick={() => setShowSettings(false)} className={`p-1 rounded-lg ${hoverBg} transition-colors`}>
+                    <X size={20} />
+                  </button>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Dimensione griglia */}
               <div>
                 <label className="block font-semibold mb-2">Dimensione Griglia</label>
@@ -883,7 +915,9 @@ const EmaSudoku = () => {
                 </p>
               </div>
             </div>
-          </div>
+              </div>
+            </div>
+          </>
         )}
 
         {/* Griglia Sudoku */}
@@ -893,7 +927,7 @@ const EmaSudoku = () => {
             <div 
               className={`border-[3px] ${currentStyle.grid} mx-auto overflow-hidden rounded-sm`}
               style={{ 
-                maxWidth: gridSize === 9 ? '640px' : gridSize === 6 ? '560px' : '480px',
+                maxWidth: gridSize === 9 ? '590px' : gridSize === 6 ? '560px' : '480px',
                 width: '100%'
               }}
             >
@@ -957,7 +991,7 @@ const EmaSudoku = () => {
                                 className={`
                                   aspect-square flex items-center justify-center
                                   ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
-                                  ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
+                                  ${isHighlighted ? (darkMode ? 'brightness-125' : 'brightness-90') : ''}
                                   ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
                                   ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
                                   ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
@@ -1118,6 +1152,30 @@ const EmaSudoku = () => {
         
         .animate-shake {
           animation: shake 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+        
+        @keyframes slideDown {
+          from { 
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-slideDown {
+          animation: slideDown 0.3s ease-out;
         }
       `}</style>
     </div>
