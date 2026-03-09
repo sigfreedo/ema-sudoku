@@ -13,6 +13,137 @@ const EmaSudoku = () => {
   const [showErrors, setShowErrors] = useState(true);
   const [smartFilter, setSmartFilter] = useState(false);
   const [suggestionsEnabled, setSuggestionsEnabled] = useState(true);
+  const [language, setLanguage] = useState('it');
+  const [timerPaused, setTimerPaused] = useState(false);
+
+  // Traduzioni
+  const translations = {
+    it: {
+      title: "Ema Sudoku 🥷",
+      newGame: "Nuova Partita",
+      settings: "Impostazioni",
+      info: "Info",
+      timer: "Timer",
+      stopTimer: "Stop",
+      pauseTimer: "Pausa",
+      resumeTimer: "Riprendi",
+      undo: "Annulla",
+      hint: "Aiuto",
+      congrats: "Complimenti! 🎉",
+      completed: "Hai completato il Sudoku!",
+      completedWithTime: "Hai completato il Sudoku in",
+      playAgain: "Gioca Ancora",
+      welcomeTitle: "Benvenuto in Ema Sudoku!",
+      welcomeText1: "Ema Sudoku nasce per avvicinare i bambini a questo celebre rompicapo e farli impratichire nella risoluzione. Scegli le dimensioni della griglia, il livello di difficoltà e il tema che preferisci e divertiti con i tuoi bimbi a completare il puzzle.",
+      welcomeText2: "Come nel sudoku classico, i simboli vanno inseriti in modo che ogni riga, colonna e blocco contenga ciascun simbolo una sola volta. Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.",
+      welcomeTip: "💡 Suggerimento: se giochi con il tema numerico, puoi cliccare sui numeri della tastiera per inserire i simboli nelle caselle più velocemente. Premi Backspace o Delete per annullare l'ultima mossa!",
+      welcomeLicense: "Il progetto è sviluppato unicamente per finalità educative, è totalmente open e rilasciato con licenza MIT.",
+      settingsTitle: "Impostazioni",
+      sizeLabel: "Dimensione",
+      difficultyLabel: "Difficoltà",
+      easy: "Facile",
+      medium: "Medio",
+      hard: "Difficile",
+      themeLabel: "Tema",
+      modeLabel: "Modalità",
+      light: "Chiaro",
+      dark: "Scuro",
+      helpsLabel: "Aiuti",
+      suggestionsToggle: "Suggerimenti",
+      suggestionsDesc: "Abilita 3 suggerimenti per aiutarti a risolvere il puzzle",
+      highlightErrorsToggle: "Evidenzia Errori",
+      highlightErrorsDesc: "Mostra un bordo rosso quando inserisci un simbolo sbagliato",
+      hideCompletedToggle: "Nascondi Completati",
+      hideCompletedDesc: "Disabilita i simboli già inseriti {gridSize} volte nella griglia",
+      smartFilterToggle: "Filtro Intelligente",
+      smartFilterDesc: "Mostra solo i simboli che possono essere inseriti nella casella",
+      footer: "Fatto con ❤️ per Ema da papà."
+    },
+    en: {
+      title: "Ema Sudoku 🥷",
+      newGame: "New Game",
+      settings: "Settings",
+      info: "Info",
+      timer: "Timer",
+      stopTimer: "Stop",
+      pauseTimer: "Pause",
+      resumeTimer: "Resume",
+      undo: "Undo",
+      hint: "Hint",
+      congrats: "Congratulations! 🎉",
+      completed: "You completed the Sudoku!",
+      completedWithTime: "You completed the Sudoku in",
+      playAgain: "Play Again",
+      welcomeTitle: "Welcome to Ema Sudoku!",
+      welcomeText1: "Ema Sudoku was created to introduce children to this famous puzzle and help them practice solving it. Choose the grid size, difficulty level, and theme you prefer, and have fun completing the puzzle with your kids.",
+      welcomeText2: "Like in classic sudoku, symbols must be placed so that each row, column, and block contains each symbol exactly once. Select an empty cell and then click the symbol you want to insert.",
+      welcomeTip: "💡 Tip: if you play with the numeric theme, you can click the keyboard numbers to insert symbols in cells faster. Press Backspace or Delete to undo the last move!",
+      welcomeLicense: "The project is developed solely for educational purposes, is completely open, and released under the MIT license.",
+      settingsTitle: "Settings",
+      sizeLabel: "Size",
+      difficultyLabel: "Difficulty",
+      easy: "Easy",
+      medium: "Medium",
+      hard: "Hard",
+      themeLabel: "Theme",
+      modeLabel: "Mode",
+      light: "Light",
+      dark: "Dark",
+      helpsLabel: "Helps",
+      suggestionsToggle: "Suggestions",
+      suggestionsDesc: "Enable 3 hints to help you solve the puzzle",
+      highlightErrorsToggle: "Highlight Errors",
+      highlightErrorsDesc: "Show a red border when you insert a wrong symbol",
+      hideCompletedToggle: "Hide Completed",
+      hideCompletedDesc: "Disable symbols already inserted {gridSize} times in the grid",
+      smartFilterToggle: "Smart Filter",
+      smartFilterDesc: "Show only symbols that can be inserted in the cell",
+      footer: "Made with ❤️ for Ema by dad."
+    },
+    es: {
+      title: "Ema Sudoku 🥷",
+      newGame: "Nuevo Juego",
+      settings: "Configuración",
+      info: "Info",
+      timer: "Cronómetro",
+      stopTimer: "Detener",
+      pauseTimer: "Pausar",
+      resumeTimer: "Reanudar",
+      undo: "Deshacer",
+      hint: "Pista",
+      congrats: "¡Felicitaciones! 🎉",
+      completed: "¡Completaste el Sudoku!",
+      completedWithTime: "¡Completaste el Sudoku en",
+      playAgain: "Jugar de Nuevo",
+      welcomeTitle: "¡Bienvenido a Ema Sudoku!",
+      welcomeText1: "Ema Sudoku nace para acercar a los niños a este famoso rompecabezas y ayudarles a practicar su resolución. Elige el tamaño de la cuadrícula, el nivel de dificultad y el tema que prefieras, y diviértete completando el puzzle con tus hijos.",
+      welcomeText2: "Como en el sudoku clásico, los símbolos deben colocarse de manera que cada fila, columna y bloque contenga cada símbolo exactamente una vez. Selecciona una celda vacía y luego haz clic en el símbolo que deseas insertar.",
+      welcomeTip: "💡 Consejo: si juegas con el tema numérico, puedes hacer clic en los números del teclado para insertar símbolos en las celdas más rápido. ¡Presiona Retroceso o Suprimir para deshacer el último movimiento!",
+      welcomeLicense: "El proyecto se desarrolla únicamente con fines educativos, es totalmente abierto y está publicado bajo licencia MIT.",
+      settingsTitle: "Configuración",
+      sizeLabel: "Tamaño",
+      difficultyLabel: "Dificultad",
+      easy: "Fácil",
+      medium: "Medio",
+      hard: "Difícil",
+      themeLabel: "Tema",
+      modeLabel: "Modo",
+      light: "Claro",
+      dark: "Oscuro",
+      helpsLabel: "Ayudas",
+      suggestionsToggle: "Sugerencias",
+      suggestionsDesc: "Activa 3 pistas para ayudarte a resolver el puzzle",
+      highlightErrorsToggle: "Resaltar Errores",
+      highlightErrorsDesc: "Muestra un borde rojo cuando insertas un símbolo incorrecto",
+      hideCompletedToggle: "Ocultar Completados",
+      hideCompletedDesc: "Desactiva los símbolos ya insertados {gridSize} veces en la cuadrícula",
+      smartFilterToggle: "Filtro Inteligente",
+      smartFilterDesc: "Muestra solo los símbolos que se pueden insertar en la celda",
+      footer: "Hecho con ❤️ para Ema por papá."
+    }
+  };
+
+  const t = translations[language];
 
   // Set di simboli disponibili con stile associato
   const symbolSets = {
@@ -131,7 +262,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-green-50',
         fixedBg: 'bg-green-100',
         selected: 'ring-emerald-500',
-        buttonActive: 'bg-green-600/70 hover:bg-green-700/70 text-white',
+        buttonActive: 'bg-green-600/50 hover:bg-green-700/50 text-white',
         buttonInactive: 'bg-green-100 text-green-300'
       },
       dark: {
@@ -143,7 +274,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-emerald-400',
-        buttonActive: 'bg-emerald-600/70 hover:bg-emerald-500/70 text-white',
+        buttonActive: 'bg-emerald-600/50 hover:bg-emerald-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -158,7 +289,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-amber-50',
         fixedBg: 'bg-amber-100',
         selected: 'ring-yellow-500',
-        buttonActive: 'bg-amber-600/70 hover:bg-amber-700/70 text-white',
+        buttonActive: 'bg-amber-600/50 hover:bg-amber-700/50 text-white',
         buttonInactive: 'bg-amber-100 text-amber-300'
       },
       dark: {
@@ -170,7 +301,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-yellow-400',
-        buttonActive: 'bg-yellow-600/70 hover:bg-yellow-500/70 text-white',
+        buttonActive: 'bg-yellow-600/50 hover:bg-yellow-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -185,7 +316,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-orange-50',
         fixedBg: 'bg-orange-100',
         selected: 'ring-red-500',
-        buttonActive: 'bg-orange-500/70 hover:bg-orange-600/70 text-white',
+        buttonActive: 'bg-orange-500/50 hover:bg-orange-600/50 text-white',
         buttonInactive: 'bg-orange-100 text-orange-300'
       },
       dark: {
@@ -197,7 +328,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-orange-400',
-        buttonActive: 'bg-orange-600/70 hover:bg-orange-500/70 text-white',
+        buttonActive: 'bg-orange-600/50 hover:bg-orange-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -212,7 +343,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-purple-50',
         fixedBg: 'bg-purple-100',
         selected: 'ring-pink-500',
-        buttonActive: 'bg-purple-500/70 hover:bg-purple-600/70 text-white',
+        buttonActive: 'bg-purple-500/50 hover:bg-purple-600/50 text-white',
         buttonInactive: 'bg-purple-100 text-purple-300'
       },
       dark: {
@@ -224,7 +355,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-purple-400',
-        buttonActive: 'bg-purple-600/70 hover:bg-purple-500/70 text-white',
+        buttonActive: 'bg-purple-600/50 hover:bg-purple-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -239,7 +370,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-blue-50',
         fixedBg: 'bg-blue-100',
         selected: 'ring-sky-500',
-        buttonActive: 'bg-blue-600/70 hover:bg-blue-700/70 text-white',
+        buttonActive: 'bg-blue-600/50 hover:bg-blue-700/50 text-white',
         buttonInactive: 'bg-blue-100 text-blue-300'
       },
       dark: {
@@ -251,7 +382,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-sky-400',
-        buttonActive: 'bg-sky-600/70 hover:bg-sky-500/70 text-white',
+        buttonActive: 'bg-sky-600/50 hover:bg-sky-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -266,7 +397,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-lime-50',
         fixedBg: 'bg-lime-100',
         selected: 'ring-green-500',
-        buttonActive: 'bg-lime-600/70 hover:bg-lime-700/70 text-white',
+        buttonActive: 'bg-lime-600/50 hover:bg-lime-700/50 text-white',
         buttonInactive: 'bg-lime-100 text-lime-300'
       },
       dark: {
@@ -278,7 +409,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-lime-400',
-        buttonActive: 'bg-lime-600/70 hover:bg-lime-500/70 text-white',
+        buttonActive: 'bg-lime-600/50 hover:bg-lime-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -293,7 +424,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-pink-50',
         fixedBg: 'bg-pink-100',
         selected: 'ring-rose-500',
-        buttonActive: 'bg-pink-500/70 hover:bg-pink-600/70 text-white',
+        buttonActive: 'bg-pink-500/50 hover:bg-pink-600/50 text-white',
         buttonInactive: 'bg-pink-100 text-pink-300'
       },
       dark: {
@@ -305,7 +436,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-pink-400',
-        buttonActive: 'bg-pink-600/70 hover:bg-pink-500/70 text-white',
+        buttonActive: 'bg-pink-600/50 hover:bg-pink-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -320,7 +451,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-rose-50',
         fixedBg: 'bg-rose-100',
         selected: 'ring-pink-500',
-        buttonActive: 'bg-rose-600/70 hover:bg-rose-700/70 text-white',
+        buttonActive: 'bg-rose-600/50 hover:bg-rose-700/50 text-white',
         buttonInactive: 'bg-rose-100 text-rose-300'
       },
       dark: {
@@ -332,7 +463,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-rose-400',
-        buttonActive: 'bg-rose-600/70 hover:bg-rose-500/70 text-white',
+        buttonActive: 'bg-rose-600/50 hover:bg-rose-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     },
@@ -347,7 +478,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-indigo-50',
         fixedBg: 'bg-indigo-100',
         selected: 'ring-violet-500',
-        buttonActive: 'bg-indigo-600/70 hover:bg-indigo-700/70 text-white',
+        buttonActive: 'bg-indigo-600/50 hover:bg-indigo-700/50 text-white',
         buttonInactive: 'bg-indigo-100 text-indigo-300'
       },
       dark: {
@@ -359,7 +490,7 @@ const EmaSudoku = () => {
         cellBg: 'bg-gray-800',
         fixedBg: 'bg-gray-700',
         selected: 'ring-indigo-400',
-        buttonActive: 'bg-indigo-600/70 hover:bg-indigo-500/70 text-white',
+        buttonActive: 'bg-indigo-600/50 hover:bg-indigo-500/50 text-white',
         buttonInactive: 'bg-gray-700 text-gray-500'
       }
     }
@@ -537,18 +668,38 @@ const EmaSudoku = () => {
   // Timer
   useEffect(() => {
     let interval;
-    if (timerActive && !completed) {
+    if (timerActive && !completed && !timerPaused) {
       interval = setInterval(() => {
         setSeconds(s => s + 1);
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [timerActive, completed]);
+  }, [timerActive, completed, timerPaused]);
 
-  // Input da tastiera (solo per tema numerico)
+  // Input da tastiera (solo per tema numerico) e navigazione con frecce
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (completed) return;
+      
+      // Navigazione con frecce
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        if (!selected) {
+          setSelected({ row: 0, col: 0 });
+          return;
+        }
+        
+        let newRow = selected.row;
+        let newCol = selected.col;
+        
+        if (e.key === 'ArrowUp') newRow = Math.max(0, selected.row - 1);
+        if (e.key === 'ArrowDown') newRow = Math.min(gridSize - 1, selected.row + 1);
+        if (e.key === 'ArrowLeft') newCol = Math.max(0, selected.col - 1);
+        if (e.key === 'ArrowRight') newCol = Math.min(gridSize - 1, selected.col + 1);
+        
+        setSelected({ row: newRow, col: newCol });
+        return;
+      }
       
       // Backspace o Delete per Undo
       if (e.key === 'Backspace' || e.key === 'Delete') {
@@ -721,33 +872,84 @@ const EmaSudoku = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight flex items-center gap-3 flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
-            Ema Sudoku 🥷
+            {t.title}
           </h1>
           <div className="flex gap-2 items-center flex-shrink-0 flex-wrap justify-center">
+            {/* Language Selector */}
+            <div className="flex gap-1 p-1 rounded-lg bg-gray-200 dark:bg-gray-700">
+              {[
+                { code: 'it', flag: '🇮🇹' },
+                { code: 'en', flag: '🇬🇧' },
+                { code: 'es', flag: '🇪🇸' }
+              ].map(({ code, flag }) => (
+                <button
+                  key={code}
+                  onClick={() => setLanguage(code)}
+                  className={`px-2 py-1 rounded text-xl transition-all ${
+                    language === code ? 'bg-white dark:bg-gray-600 shadow' : 'opacity-50 hover:opacity-100'
+                  }`}
+                  title={code.toUpperCase()}
+                >
+                  {flag}
+                </button>
+              ))}
+            </div>
+            
+            {/* Timer Button */}
             <button
-              onClick={() => setTimerActive(!timerActive)}
-              className={`p-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors ${
-                timerActive ? (darkMode ? 'bg-blue-900 border-blue-500' : 'bg-blue-100 border-blue-500') : cardBg
+              onClick={() => {
+                if (timerActive) {
+                  setTimerActive(false);
+                  setTimerPaused(false);
+                  setSeconds(0);
+                } else {
+                  setTimerActive(true);
+                  setTimerPaused(false);
+                  setSeconds(0);
+                }
+              }}
+              className={`px-3 py-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors flex items-center gap-2 ${
+                timerActive ? (darkMode ? 'bg-red-900/30 border-red-500' : 'bg-red-100 border-red-500') : cardBg
               }`}
-              title={timerActive ? "Ferma timer" : "Avvia timer"}
+              title={timerActive ? t.stopTimer : t.timer}
             >
-              <Timer size={24} />
+              <Timer size={20} />
+              <span className="text-sm font-semibold">{timerActive ? t.stopTimer : t.timer}</span>
             </button>
+            
+            {/* Pause/Resume Button (only when timer active) */}
             {timerActive && (
-              <div className={`px-3 py-1 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold`}>
-                {formatTime(seconds)}
-              </div>
+              <>
+                <button
+                  onClick={() => setTimerPaused(!timerPaused)}
+                  className={`px-3 py-2 rounded-lg border ${borderColor} transition-colors flex items-center gap-2 ${
+                    timerPaused 
+                      ? (darkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-100 border-green-500')
+                      : (darkMode ? 'bg-yellow-900/30 border-yellow-500' : 'bg-yellow-100 border-yellow-500')
+                  }`}
+                  title={timerPaused ? t.resumeTimer : t.pauseTimer}
+                >
+                  <span className="text-sm font-semibold">{timerPaused ? t.resumeTimer : t.pauseTimer}</span>
+                </button>
+                
+                {/* Timer Display */}
+                <div className={`px-3 py-2 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold`}>
+                  {formatTime(seconds)}
+                </div>
+              </>
             )}
+            
             <button
               onClick={() => setShowInfo(!showInfo)}
               className={`p-2 rounded-lg ${cardBg} border ${borderColor} ${hoverBg} transition-colors`}
-              title="Informazioni"
+              title={t.info}
             >
               <Info size={24} />
             </button>
             <button
               onClick={() => setShowSettings(!showSettings)}
               className={`p-2 rounded-lg ${cardBg} border ${borderColor} ${hoverBg} transition-colors`}
+              title={t.settings}
             >
               <Settings size={24} />
             </button>
@@ -770,24 +972,16 @@ const EmaSudoku = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-bold text-xl">Benvenuto in Ema Sudoku!</h3>
+                  <h3 className="font-bold text-xl">{t.welcomeTitle}</h3>
                   <button onClick={() => setShowInfo(false)} className={`p-1 rounded-lg ${hoverBg} transition-colors`}>
                     <X size={20} />
                   </button>
                 </div>
                 <div className="text-sm opacity-90 space-y-3">
-                  <p>
-                    Ema Sudoku nasce per avvicinare i bambini a questo celebre rompicapo e farli impratichire nella risoluzione. Scegli le dimensioni della griglia, il livello di difficoltà e il tema che preferisci e divertiti con i tuoi bimbi a completare il puzzle.
-                  </p>
-                  <p>
-                    Come nel sudoku classico, i simboli vanno inseriti in modo che ogni riga, colonna e blocco contenga ciascun simbolo una sola volta. Seleziona una casella vuota e poi clicca sul simbolo che vuoi inserire.
-                  </p>
-                  <p className="font-semibold">
-                    💡 Suggerimento: se giochi con il tema numerico, puoi cliccare sui numeri della tastiera per inserire i simboli nelle caselle più velocemente. Premi Backspace o Delete per annullare l'ultima mossa!
-                  </p>
-                  <p className="text-xs opacity-70 pt-2 border-t border-current/20">
-                    Il progetto è sviluppato unicamente per finalità educative, è totalmente open e rilasciato con licenza MIT.
-                  </p>
+                  <p>{t.welcomeText1}</p>
+                  <p>{t.welcomeText2}</p>
+                  <p className="font-semibold">{t.welcomeTip}</p>
+                  <p className="text-xs opacity-70 pt-2 border-t border-current/20">{t.welcomeLicense}</p>
                 </div>
               </div>
             </div>
@@ -810,7 +1004,7 @@ const EmaSudoku = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-start mb-6">
-                  <h3 className="font-bold text-xl">Impostazioni</h3>
+                  <h3 className="font-bold text-xl">{t.settingsTitle}</h3>
                   <button onClick={() => setShowSettings(false)} className={`p-1 rounded-lg ${hoverBg} transition-colors`}>
                     <X size={20} />
                   </button>
@@ -838,7 +1032,7 @@ const EmaSudoku = () => {
                     {/* Dimensione griglia con slider compatto */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Dimensione</label>
+                        <label className="font-semibold text-xs uppercase tracking-wide opacity-70">{t.sizeLabel}</label>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold w-8 text-right">{gridSize}×{gridSize}</span>
                           <div 
@@ -872,10 +1066,10 @@ const EmaSudoku = () => {
                     {/* Difficoltà con slider compatto */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Difficoltà</label>
+                        <label className="font-semibold text-xs uppercase tracking-wide opacity-70">{t.difficultyLabel}</label>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold">
-                            {difficulty === 'easy' ? 'Facile' : difficulty === 'medium' ? 'Medio' : 'Difficile'}
+                            {difficulty === 'easy' ? {t.easy} : difficulty === 'medium' ? {t.medium} : {t.hard}}
                           </span>
                           <span className="text-lg">
                             {difficulty === 'easy' ? '😊' : difficulty === 'medium' ? '🤔' : '😰'}
@@ -897,7 +1091,7 @@ const EmaSudoku = () => {
 
                     {/* Temi in 2 righe da 5 */}
                     <div>
-                      <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">Tema</label>
+                      <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">{t.themeLabel}</label>
                       <div className="space-y-2">
                         {/* Prima riga */}
                         <div className="flex gap-2 justify-center">
@@ -914,7 +1108,7 @@ const EmaSudoku = () => {
                               className="flex flex-col items-center gap-1"
                               style={{ width: '60px' }}
                             >
-                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-2 transition-all ${bg} ${
+                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-3 transition-all ${bg} ${
                                 symbolSet === key ? `${border}` : 'border-transparent'
                               }`}>
                                 {icon}
@@ -938,7 +1132,7 @@ const EmaSudoku = () => {
                               className="flex flex-col items-center gap-1"
                               style={{ width: '60px' }}
                             >
-                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-2 transition-all ${bg} ${
+                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-3 transition-all ${bg} ${
                                 symbolSet === key ? `${border}` : 'border-transparent'
                               }`}>
                                 {icon}
@@ -952,7 +1146,7 @@ const EmaSudoku = () => {
 
                     {/* Dark Mode più largo */}
                     <div>
-                      <label className="font-semibold mb-2 block text-xs uppercase tracking-wide opacity-70">Modalità</label>
+                      <label className="font-semibold mb-2 block text-xs uppercase tracking-wide opacity-70">{t.modeLabel}</label>
                       <div className="flex justify-center">
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
@@ -966,7 +1160,7 @@ const EmaSudoku = () => {
                           }`}>
                             <div className={`flex items-center gap-1.5 transition-opacity z-10 ${!darkMode ? 'opacity-100' : 'opacity-40'}`}>
                               <span className="text-xs">☀️</span>
-                              <span className="text-[10px] font-semibold">Chiaro</span>
+                              <span className="text-[10px] font-semibold">{t.light}</span>
                             </div>
                             <div 
                               className={`absolute w-16 h-6 rounded-md transition-all`}
@@ -976,7 +1170,7 @@ const EmaSudoku = () => {
                               }}
                             ></div>
                             <div className={`flex items-center gap-1.5 transition-opacity z-10 ${darkMode ? 'opacity-100' : 'opacity-40'}`}>
-                              <span className="text-[10px] font-semibold">Scuro</span>
+                              <span className="text-[10px] font-semibold">{t.dark}</span>
                               <span className="text-xs">🌙</span>
                             </div>
                           </div>
@@ -986,12 +1180,12 @@ const EmaSudoku = () => {
 
                     {/* Opzioni in 2x2 grid */}
                     <div>
-                      <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Aiuti</label>
+                      <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">{t.helpsLabel}</label>
                       <div className="grid grid-cols-2 gap-4 text-[10px]">
                         {/* Suggerimenti */}
                         <div>
                           <label className="flex items-center justify-between cursor-pointer mb-1">
-                            <span className="font-medium">Suggerimenti</span>
+                            <span className="font-medium">{t.suggestionsToggle}</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
@@ -1011,14 +1205,14 @@ const EmaSudoku = () => {
                             </div>
                           </label>
                           <p className="text-[9px] opacity-60 leading-snug">
-                            Abilita 3 suggerimenti per aiutarti a risolvere il puzzle
+                            {t.suggestionsDesc}
                           </p>
                         </div>
 
                         {/* Evidenzia Errori */}
                         <div>
                           <label className="flex items-center justify-between cursor-pointer mb-1">
-                            <span className="font-medium">Evidenzia Errori</span>
+                            <span className="font-medium">{t.highlightErrorsToggle}</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
@@ -1038,14 +1232,14 @@ const EmaSudoku = () => {
                             </div>
                           </label>
                           <p className="text-[9px] opacity-60 leading-snug">
-                            Mostra un bordo rosso quando inserisci un simbolo sbagliato
+                            {t.highlightErrorsDesc}
                           </p>
                         </div>
 
                         {/* Nascondi Completati */}
                         <div>
                           <label className="flex items-center justify-between cursor-pointer mb-1">
-                            <span className="font-medium">Nascondi Completati</span>
+                            <span className="font-medium">{t.hideCompletedToggle}</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
@@ -1065,14 +1259,14 @@ const EmaSudoku = () => {
                             </div>
                           </label>
                           <p className="text-[9px] opacity-60 leading-snug">
-                            Disabilita i simboli già inseriti {gridSize} volte nella griglia
+                            {t.hideCompletedDesc.replace("{gridSize}", gridSize)}
                           </p>
                         </div>
 
                         {/* Filtro Intelligente */}
                         <div>
                           <label className="flex items-center justify-between cursor-pointer mb-1">
-                            <span className="font-medium">Filtro Intelligente</span>
+                            <span className="font-medium">{t.smartFilterToggle}</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
@@ -1092,7 +1286,7 @@ const EmaSudoku = () => {
                             </div>
                           </label>
                           <p className="text-[9px] opacity-60 leading-snug">
-                            Mostra solo i simboli che possono essere inseriti nella casella
+                            {t.smartFilterDesc}
                           </p>
                         </div>
                       </div>
@@ -1284,10 +1478,9 @@ const EmaSudoku = () => {
                   ? `${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white hover:shadow-lg transform hover:scale-105`
                   : `${darkMode ? 'bg-gray-700' : 'bg-gray-300'} ${darkMode ? 'text-gray-500' : 'text-gray-500'} cursor-not-allowed`
                 }`}
-              title="Annulla ultima mossa (Backspace/Delete)"
             >
               <Undo size={20} />
-              Annulla
+              {t.undo}
             </button>
           )}
           
@@ -1302,7 +1495,7 @@ const EmaSudoku = () => {
                 }`}
             >
               <Lightbulb size={20} />
-              Aiuto ({hints})
+              {t.hint} ({hints})
             </button>
           )}
         </div>
@@ -1312,16 +1505,16 @@ const EmaSudoku = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className={`${cardBg} rounded-2xl p-8 max-w-md text-center shadow-2xl`}>
               <Trophy size={64} className="mx-auto mb-4 text-yellow-500" />
-              <h2 className="text-3xl font-bold mb-4">Complimenti! 🎉</h2>
+              <h2 className="text-3xl font-bold mb-4">{t.congrats}</h2>
               <p className="text-lg mb-6 opacity-90">
-                Hai completato il Sudoku!
+                {seconds > 0 ? `${t.completedWithTime} ${formatTime(seconds)}!` : t.completed}
               </p>
               <button
                 onClick={handleNewGame}
                 className={`px-8 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105
                   ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
               >
-                Gioca Ancora
+                {t.playAgain}
               </button>
             </div>
           </div>
@@ -1330,7 +1523,7 @@ const EmaSudoku = () => {
         {/* Footer */}
         <footer className="mt-12 mb-6 text-center">
           <p className="text-sm opacity-70 mb-2">
-            Fatto con ❤️ per Ema da papà
+            {t.footer}
           </p>
           <a 
             href="https://github.com/sigfreedo/ema-sudoku" 
