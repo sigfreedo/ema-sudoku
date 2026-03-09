@@ -816,201 +816,259 @@ const EmaSudoku = () => {
                 </div>
                 <div className="space-y-6 text-sm">
               
-              {/* Dimensione griglia con slider compatto */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Dimensione</label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold w-8 text-right">{gridSize}×{gridSize}</span>
-                    <div 
-                      className="grid gap-[1px] bg-gray-400 dark:bg-gray-600 p-[2px] rounded"
-                      style={{
-                        gridTemplateColumns: `repeat(${gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3}, 1fr)`,
-                        gridTemplateRows: `repeat(${gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3}, 1fr)`,
-                        width: '24px',
-                        height: '24px'
-                      }}
-                    >
-                      {Array.from({ length: (gridSize === 4 ? 4 : gridSize === 6 ? 6 : 9) }).map((_, i) => (
-                        <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-white'}`}></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="2"
-                  value={gridSize === 4 ? 0 : gridSize === 6 ? 1 : 2}
-                  onChange={(e) => setGridSize([4, 6, 9][parseInt(e.target.value)])}
-                  className="w-full h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                  style={{
-                    accentColor: currentStyle.selected.includes('blue') ? '#3b82f6' : 
-                                 currentStyle.selected.includes('emerald') ? '#10b981' :
-                                 currentStyle.selected.includes('yellow') ? '#eab308' :
-                                 currentStyle.selected.includes('orange') ? '#f97316' :
-                                 currentStyle.selected.includes('purple') ? '#a855f7' :
-                                 currentStyle.selected.includes('sky') ? '#0ea5e9' :
-                                 currentStyle.selected.includes('lime') ? '#84cc16' :
-                                 currentStyle.selected.includes('pink') ? '#ec4899' :
-                                 currentStyle.selected.includes('rose') ? '#f43f5e' :
-                                 currentStyle.selected.includes('violet') ? '#8b5cf6' : '#3b82f6'
-                  }}
-                />
-              </div>
-
-              {/* Difficoltà con slider compatto */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Difficoltà</label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold">
-                      {difficulty === 'easy' ? 'Facile' : difficulty === 'medium' ? 'Medio' : 'Difficile'}
-                    </span>
-                    <span className="text-lg">
-                      {difficulty === 'easy' ? '😊' : difficulty === 'medium' ? '🤔' : '😰'}
-                    </span>
-                  </div>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="2"
-                  value={difficulty === 'easy' ? 0 : difficulty === 'medium' ? 1 : 2}
-                  onChange={(e) => setDifficulty(['easy', 'medium', 'hard'][parseInt(e.target.value)])}
-                  className="w-full h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                  style={{
-                    accentColor: currentStyle.selected.includes('blue') ? '#3b82f6' : 
-                                 currentStyle.selected.includes('emerald') ? '#10b981' :
-                                 currentStyle.selected.includes('yellow') ? '#eab308' :
-                                 currentStyle.selected.includes('orange') ? '#f97316' :
-                                 currentStyle.selected.includes('purple') ? '#a855f7' :
-                                 currentStyle.selected.includes('sky') ? '#0ea5e9' :
-                                 currentStyle.selected.includes('lime') ? '#84cc16' :
-                                 currentStyle.selected.includes('pink') ? '#ec4899' :
-                                 currentStyle.selected.includes('rose') ? '#f43f5e' :
-                                 currentStyle.selected.includes('violet') ? '#8b5cf6' : '#3b82f6'
-                  }}
-                />
-              </div>
-
-              {/* Temi compatti */}
-              <div>
-                <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">Tema</label>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {[
-                    { key: 'numbers', icon: '🔢', name: 'Numerico', color: 'bg-gray-700/70', border: 'border-gray-500' },
-                    { key: 'animals', icon: '🐾', name: 'Animalesco', color: 'bg-amber-600/70', border: 'border-amber-500' },
-                    { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', color: 'bg-green-600/70', border: 'border-green-500' },
-                    { key: 'fruits', icon: '🍎', name: 'Fruttoso', color: 'bg-orange-500/70', border: 'border-orange-500' },
-                    { key: 'shapes', icon: '⬛', name: 'Geometrico', color: 'bg-purple-500/70', border: 'border-purple-500' },
-                    { key: 'sports', icon: '⚽', name: 'Sportivo', color: 'bg-blue-600/70', border: 'border-blue-500' },
-                    { key: 'vegetables', icon: '🥕', name: 'Vegetale', color: 'bg-lime-600/70', border: 'border-lime-500' },
-                    { key: 'desserts', icon: '🍰', name: 'Goloso', color: 'bg-pink-500/70', border: 'border-pink-500' },
-                    { key: 'flowers', icon: '🌸', name: 'Fiorito', color: 'bg-rose-500/70', border: 'border-rose-500' },
-                    { key: 'monsters', icon: '👻', name: 'Mostruoso', color: 'bg-indigo-600/70', border: 'border-indigo-500' }
-                  ].map(({ key, icon, name, color, border }) => (
-                    <button
-                      key={key}
-                      onClick={() => setSymbolSet(key)}
-                      className="flex flex-col items-center gap-1"
-                      style={{ width: '60px' }}
-                    >
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-2 transition-all ${color} ${
-                        symbolSet === key ? border : 'border-transparent'
-                      }`}>
-                        {icon}
+              {/* Colore tema corrente per gli accent */}
+              {(() => {
+                const themeColors = {
+                  numbers: '#6b7280',
+                  animals: '#d97706', 
+                  dinosaurs: '#16a34a',
+                  fruits: '#f97316',
+                  shapes: '#a855f7',
+                  sports: '#2563eb',
+                  vegetables: '#65a30d',
+                  desserts: '#ec4899',
+                  flowers: '#e11d48',
+                  monsters: '#4f46e5'
+                };
+                const currentThemeColor = themeColors[symbolSet] || '#3b82f6';
+                
+                return (
+                  <>
+                    {/* Dimensione griglia con slider compatto */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Dimensione</label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold w-8 text-right">{gridSize}×{gridSize}</span>
+                          <div 
+                            className="grid gap-[1px] bg-gray-400 dark:bg-gray-600 p-[2px] rounded"
+                            style={{
+                              gridTemplateColumns: `repeat(${gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3}, 1fr)`,
+                              gridTemplateRows: `repeat(${gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3}, 1fr)`,
+                              width: '24px',
+                              height: '24px'
+                            }}
+                          >
+                            {Array.from({ length: (gridSize === 4 ? 4 : gridSize === 6 ? 6 : 9) }).map((_, i) => (
+                              <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-white'}`}></div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <span className="text-[9px] font-medium text-center leading-tight">{name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Dark Mode compatto */}
-              <div>
-                <label className="font-semibold mb-2 block text-xs uppercase tracking-wide opacity-70">Modalità</label>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={darkMode}
-                    onChange={(e) => setDarkMode(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className={`w-32 h-8 rounded-lg transition-colors flex items-center justify-between px-2 ${
-                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                  }`}>
-                    <div className={`flex items-center gap-1 transition-opacity z-10 ${!darkMode ? 'opacity-100' : 'opacity-40'}`}>
-                      <span className="text-xs">☀️</span>
-                      <span className="text-[10px] font-semibold">Chiaro</span>
+                      <div className="flex justify-center">
+                        <input
+                          type="range"
+                          min="0"
+                          max="2"
+                          value={gridSize === 4 ? 0 : gridSize === 6 ? 1 : 2}
+                          onChange={(e) => setGridSize([4, 6, 9][parseInt(e.target.value)])}
+                          className="w-64 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                          style={{ accentColor: currentThemeColor }}
+                        />
+                      </div>
                     </div>
-                    <div className={`absolute w-14 h-6 rounded-md transition-all ${
-                      darkMode ? 'bg-indigo-600 right-1' : 'bg-blue-500 left-1'
-                    }`}></div>
-                    <div className={`flex items-center gap-1 transition-opacity z-10 ${darkMode ? 'opacity-100' : 'opacity-40'}`}>
-                      <span className="text-[10px] font-semibold">Scuro</span>
-                      <span className="text-xs">🌙</span>
+
+                    {/* Difficoltà con slider compatto */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="font-semibold text-xs uppercase tracking-wide opacity-70">Difficoltà</label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold">
+                            {difficulty === 'easy' ? 'Facile' : difficulty === 'medium' ? 'Medio' : 'Difficile'}
+                          </span>
+                          <span className="text-lg">
+                            {difficulty === 'easy' ? '😊' : difficulty === 'medium' ? '🤔' : '😰'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-center">
+                        <input
+                          type="range"
+                          min="0"
+                          max="2"
+                          value={difficulty === 'easy' ? 0 : difficulty === 'medium' ? 1 : 2}
+                          onChange={(e) => setDifficulty(['easy', 'medium', 'hard'][parseInt(e.target.value)])}
+                          className="w-64 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                          style={{ accentColor: currentThemeColor }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </label>
-              </div>
 
-              {/* Opzioni in una riga */}
-              <div className="flex gap-4 text-[10px] pt-2 border-t border-gray-300 dark:border-gray-600">
-                <label className="flex items-center gap-1.5 cursor-pointer flex-1">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={hideCompleted}
-                      onChange={(e) => setHideCompleted(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className={`w-8 h-4 rounded-full transition-colors ${
-                      hideCompleted ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
-                    }`}></div>
-                    <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
-                      hideCompleted ? 'translate-x-4' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                  <span className="font-medium">Nascondi Completati</span>
-                </label>
+                    {/* Temi in 2 righe da 5 */}
+                    <div>
+                      <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">Tema</label>
+                      <div className="space-y-2">
+                        {/* Prima riga */}
+                        <div className="flex gap-2 justify-center">
+                          {[
+                            { key: 'numbers', icon: '🔢', name: 'Numerico', bg: 'bg-gray-700/70', border: 'border-gray-500' },
+                            { key: 'animals', icon: '🐾', name: 'Animalesco', bg: 'bg-amber-600/70', border: 'border-amber-600' },
+                            { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', bg: 'bg-green-600/70', border: 'border-green-600' },
+                            { key: 'fruits', icon: '🍎', name: 'Fruttoso', bg: 'bg-orange-500/70', border: 'border-orange-500' },
+                            { key: 'shapes', icon: '⬛', name: 'Geometrico', bg: 'bg-purple-500/70', border: 'border-purple-500' }
+                          ].map(({ key, icon, name, bg, border }) => (
+                            <button
+                              key={key}
+                              onClick={() => setSymbolSet(key)}
+                              className="flex flex-col items-center gap-1"
+                              style={{ width: '60px' }}
+                            >
+                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-2 transition-all ${bg} ${
+                                symbolSet === key ? `${border}` : 'border-transparent'
+                              }`}>
+                                {icon}
+                              </div>
+                              <span className="text-[9px] font-medium text-center leading-tight">{name}</span>
+                            </button>
+                          ))}
+                        </div>
+                        {/* Seconda riga */}
+                        <div className="flex gap-2 justify-center">
+                          {[
+                            { key: 'sports', icon: '⚽', name: 'Sportivo', bg: 'bg-blue-600/70', border: 'border-blue-600' },
+                            { key: 'vegetables', icon: '🥕', name: 'Vegetale', bg: 'bg-lime-600/70', border: 'border-lime-600' },
+                            { key: 'desserts', icon: '🍰', name: 'Goloso', bg: 'bg-pink-500/70', border: 'border-pink-500' },
+                            { key: 'flowers', icon: '🌸', name: 'Fiorito', bg: 'bg-rose-500/70', border: 'border-rose-500' },
+                            { key: 'monsters', icon: '👻', name: 'Mostruoso', bg: 'bg-indigo-600/70', border: 'border-indigo-600' }
+                          ].map(({ key, icon, name, bg, border }) => (
+                            <button
+                              key={key}
+                              onClick={() => setSymbolSet(key)}
+                              className="flex flex-col items-center gap-1"
+                              style={{ width: '60px' }}
+                            >
+                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-2 transition-all ${bg} ${
+                                symbolSet === key ? `${border}` : 'border-transparent'
+                              }`}>
+                                {icon}
+                              </div>
+                              <span className="text-[9px] font-medium text-center leading-tight">{name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
 
-                <label className="flex items-center gap-1.5 cursor-pointer flex-1">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={showErrors}
-                      onChange={(e) => setShowErrors(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className={`w-8 h-4 rounded-full transition-colors ${
-                      showErrors ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
-                    }`}></div>
-                    <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
-                      showErrors ? 'translate-x-4' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                  <span className="font-medium">Evidenzia Errori</span>
-                </label>
+                    {/* Dark Mode più largo */}
+                    <div>
+                      <label className="font-semibold mb-2 block text-xs uppercase tracking-wide opacity-70">Modalità</label>
+                      <div className="flex justify-center">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={darkMode}
+                            onChange={(e) => setDarkMode(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className={`w-40 h-8 rounded-lg transition-colors flex items-center justify-between px-2 ${
+                            darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                          }`}>
+                            <div className={`flex items-center gap-1.5 transition-opacity z-10 ${!darkMode ? 'opacity-100' : 'opacity-40'}`}>
+                              <span className="text-xs">☀️</span>
+                              <span className="text-[10px] font-semibold">Chiaro</span>
+                            </div>
+                            <div 
+                              className={`absolute w-16 h-6 rounded-md transition-all`}
+                              style={{
+                                backgroundColor: currentThemeColor,
+                                [darkMode ? 'right' : 'left']: '4px'
+                              }}
+                            ></div>
+                            <div className={`flex items-center gap-1.5 transition-opacity z-10 ${darkMode ? 'opacity-100' : 'opacity-40'}`}>
+                              <span className="text-[10px] font-semibold">Scuro</span>
+                              <span className="text-xs">🌙</span>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
 
-                <label className="flex items-center gap-1.5 cursor-pointer flex-1">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={smartFilter}
-                      onChange={(e) => setSmartFilter(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className={`w-8 h-4 rounded-full transition-colors ${
-                      smartFilter ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
-                    }`}></div>
-                    <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
-                      smartFilter ? 'translate-x-4' : 'translate-x-0'
-                    }`}></div>
-                  </div>
-                  <span className="font-medium">Filtro Intelligente</span>
-                </label>
-              </div>
+                    {/* Opzioni con descrizioni */}
+                    <div>
+                      <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">Aiuti</label>
+                      <div className="flex gap-4 text-[10px]">
+                        <div className="flex-1">
+                          <label className="flex items-center gap-1.5 cursor-pointer mb-1">
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={hideCompleted}
+                                onChange={(e) => setHideCompleted(e.target.checked)}
+                                className="sr-only peer"
+                              />
+                              <div 
+                                className={`w-8 h-4 rounded-full transition-colors ${
+                                  hideCompleted ? '' : 'bg-gray-300 dark:bg-gray-600'
+                                }`}
+                                style={{ backgroundColor: hideCompleted ? currentThemeColor : '' }}
+                              ></div>
+                              <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
+                                hideCompleted ? 'translate-x-4' : 'translate-x-0'
+                              }`}></div>
+                            </div>
+                            <span className="font-medium">Nascondi Completati</span>
+                          </label>
+                          <p className="text-[9px] opacity-60 ml-10">
+                            Disabilita simboli già usati {gridSize} volte
+                          </p>
+                        </div>
+
+                        <div className="flex-1">
+                          <label className="flex items-center gap-1.5 cursor-pointer mb-1">
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={showErrors}
+                                onChange={(e) => setShowErrors(e.target.checked)}
+                                className="sr-only peer"
+                              />
+                              <div 
+                                className={`w-8 h-4 rounded-full transition-colors ${
+                                  showErrors ? '' : 'bg-gray-300 dark:bg-gray-600'
+                                }`}
+                                style={{ backgroundColor: showErrors ? currentThemeColor : '' }}
+                              ></div>
+                              <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
+                                showErrors ? 'translate-x-4' : 'translate-x-0'
+                              }`}></div>
+                            </div>
+                            <span className="font-medium">Evidenzia Errori</span>
+                          </label>
+                          <p className="text-[9px] opacity-60 ml-10">
+                            Feedback rosso per numeri sbagliati
+                          </p>
+                        </div>
+
+                        <div className="flex-1">
+                          <label className="flex items-center gap-1.5 cursor-pointer mb-1">
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={smartFilter}
+                                onChange={(e) => setSmartFilter(e.target.checked)}
+                                className="sr-only peer"
+                              />
+                              <div 
+                                className={`w-8 h-4 rounded-full transition-colors ${
+                                  smartFilter ? '' : 'bg-gray-300 dark:bg-gray-600'
+                                }`}
+                                style={{ backgroundColor: smartFilter ? currentThemeColor : '' }}
+                              ></div>
+                              <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
+                                smartFilter ? 'translate-x-4' : 'translate-x-0'
+                              }`}></div>
+                            </div>
+                            <span className="font-medium">Filtro Intelligente</span>
+                          </label>
+                          <p className="text-[9px] opacity-60 ml-10">
+                            Solo simboli validi per la casella
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
 
             </div>
               </div>
