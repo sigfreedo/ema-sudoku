@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Lightbulb, Trophy, Info, X, Timer, Undo } from 'lucide-react';
+import { Settings, RotateCcw, Lightbulb, Trophy, Info, X, Timer, Undo, Square, Pause, Play, ChevronDown } from 'lucide-react';
 
 const EmaSudoku = () => {
   // Configurazione
@@ -15,6 +15,7 @@ const EmaSudoku = () => {
   const [suggestionsEnabled, setSuggestionsEnabled] = useState(true);
   const [language, setLanguage] = useState('it');
   const [timerPaused, setTimerPaused] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   // Traduzioni
   const translations = {
@@ -61,7 +62,7 @@ const EmaSudoku = () => {
     },
     en: {
       title: "Ema Sudoku 🥷",
-      newGame: "New Game",
+      newGame: "Nuova Partita",
       settings: "Settings",
       info: "Info",
       timer: "Timer",
@@ -102,7 +103,7 @@ const EmaSudoku = () => {
     },
     es: {
       title: "Ema Sudoku 🥷",
-      newGame: "Nuevo Juego",
+      newGame: "Nuova Partita",
       settings: "Configuración",
       info: "Info",
       timer: "Cronómetro",
@@ -875,27 +876,50 @@ const EmaSudoku = () => {
             {t.title}
           </h1>
           <div className="flex gap-2 items-center flex-shrink-0 flex-wrap justify-center">
-            {/* Language Selector */}
-            <div className="flex gap-1 p-1 rounded-lg bg-gray-200 dark:bg-gray-700">
-              {[
-                { code: 'it', flag: '🇮🇹' },
-                { code: 'en', flag: '🇬🇧' },
-                { code: 'es', flag: '🇪🇸' }
-              ].map(({ code, flag }) => (
-                <button
-                  key={code}
-                  onClick={() => setLanguage(code)}
-                  className={`px-2 py-1 rounded text-xl transition-all ${
-                    language === code ? 'bg-white dark:bg-gray-600 shadow' : 'opacity-50 hover:opacity-100'
-                  }`}
-                  title={code.toUpperCase()}
-                >
-                  {flag}
-                </button>
-              ))}
+            {/* Language Selector - dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className={`p-2 rounded-lg ${cardBg} border ${borderColor} ${hoverBg} transition-colors flex items-center gap-1 grayscale`}
+                title="Language"
+              >
+                <span className="text-lg">
+                  {language === 'it' ? '🇮🇹' : language === 'en' ? '🇬🇧' : '🇪🇸'}
+                </span>
+                <ChevronDown size={16} className="opacity-50" />
+              </button>
+              {showLanguageMenu && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-10" 
+                    onClick={() => setShowLanguageMenu(false)}
+                  ></div>
+                  <div className={`absolute top-full right-0 mt-1 ${cardBg} border ${borderColor} rounded-lg shadow-lg overflow-hidden z-20`}>
+                    {[
+                      { code: 'it', flag: '🇮🇹', name: 'Italiano' },
+                      { code: 'en', flag: '🇬🇧', name: 'English' },
+                      { code: 'es', flag: '🇪🇸', name: 'Español' }
+                    ].map(({ code, flag, name }) => (
+                      <button
+                        key={code}
+                        onClick={() => {
+                          setLanguage(code);
+                          setShowLanguageMenu(false);
+                        }}
+                        className={`w-full px-4 py-2 text-left flex items-center gap-2 transition-colors ${
+                          language === code ? `${darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}` : `${hoverBg}`
+                        }`}
+                      >
+                        <span className="text-lg">{flag}</span>
+                        <span className="text-sm">{name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             
-            {/* Timer Button */}
+            {/* Timer Button - minimal icon only */}
             <button
               onClick={() => {
                 if (timerActive) {
@@ -908,32 +932,25 @@ const EmaSudoku = () => {
                   setSeconds(0);
                 }
               }}
-              className={`px-3 py-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors flex items-center gap-2 ${
-                timerActive ? (darkMode ? 'bg-red-900/30 border-red-500' : 'bg-red-100 border-red-500') : cardBg
-              }`}
+              className={`p-2 py-1 rounded-lg border ${borderColor} ${hoverBg} transition-colors`}
               title={timerActive ? t.stopTimer : t.timer}
             >
-              <Timer size={20} />
-              <span className="text-sm font-semibold">{timerActive ? t.stopTimer : t.timer}</span>
+              {timerActive ? <Square size={20} /> : <Timer size={20} />}
             </button>
             
-            {/* Pause/Resume Button (only when timer active) */}
+            {/* Pause/Play Button - minimal icon only (only when timer active) */}
             {timerActive && (
               <>
                 <button
                   onClick={() => setTimerPaused(!timerPaused)}
-                  className={`px-3 py-2 rounded-lg border ${borderColor} transition-colors flex items-center gap-2 ${
-                    timerPaused 
-                      ? (darkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-100 border-green-500')
-                      : (darkMode ? 'bg-yellow-900/30 border-yellow-500' : 'bg-yellow-100 border-yellow-500')
-                  }`}
+                  className={`p-2 py-1 rounded-lg border ${borderColor} ${hoverBg} transition-colors`}
                   title={timerPaused ? t.resumeTimer : t.pauseTimer}
                 >
-                  <span className="text-sm font-semibold">{timerPaused ? t.resumeTimer : t.pauseTimer}</span>
+                  {timerPaused ? <Play size={20} /> : <Pause size={20} />}
                 </button>
                 
                 {/* Timer Display */}
-                <div className={`px-3 py-2 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold`}>
+                <div className={`px-3 py-1 rounded-lg ${cardBg} border ${borderColor} font-mono font-bold text-sm`}>
                   {formatTime(seconds)}
                 </div>
               </>
@@ -1108,7 +1125,7 @@ const EmaSudoku = () => {
                               className="flex flex-col items-center gap-1"
                               style={{ width: '60px' }}
                             >
-                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-3 transition-all ${bg} ${
+                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-[5px] transition-all ${bg} ${
                                 symbolSet === key ? `${border}` : 'border-transparent'
                               }`}>
                                 {icon}
@@ -1132,7 +1149,7 @@ const EmaSudoku = () => {
                               className="flex flex-col items-center gap-1"
                               style={{ width: '60px' }}
                             >
-                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-3 transition-all ${bg} ${
+                              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl border-[5px] transition-all ${bg} ${
                                 symbolSet === key ? `${border}` : 'border-transparent'
                               }`}>
                                 {icon}
