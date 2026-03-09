@@ -1069,7 +1069,7 @@ const EmaSudoku = () => {
                         <label className="font-semibold text-xs uppercase tracking-wide opacity-70">{t.difficultyLabel}</label>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold">
-                            {difficulty === 'easy' ? {t.easy} : difficulty === 'medium' ? {t.medium} : {t.hard}}
+                            {difficulty === 'easy' ? t.easy : difficulty === 'medium' ? t.medium : t.hard}
                           </span>
                           <span className="text-lg">
                             {difficulty === 'easy' ? '😊' : difficulty === 'medium' ? '🤔' : '😰'}
@@ -1259,7 +1259,7 @@ const EmaSudoku = () => {
                             </div>
                           </label>
                           <p className="text-[9px] opacity-60 leading-snug">
-                            {t.hideCompletedDesc.replace("{gridSize}", gridSize)}
+                            {t.hideCompletedDesc.replace('{gridSize}', gridSize)}
                           </p>
                         </div>
 
