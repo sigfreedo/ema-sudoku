@@ -638,7 +638,9 @@ const EmaSudoku = () => {
               style={{ 
                 gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
                 maxWidth: gridSize === 9 ? '800px' : gridSize === 6 ? '700px' : '600px',
-                width: '100%'
+                maxHeight: gridSize === 9 ? 'min(800px, 60vh)' : gridSize === 6 ? 'min(700px, 65vh)' : 'min(600px, 70vh)',
+                width: '100%',
+                aspectRatio: '1/1'
               }}
             >
               {board.map((row, rowIndex) => (
