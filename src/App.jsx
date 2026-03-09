@@ -634,11 +634,10 @@ const EmaSudoku = () => {
         <div className="flex justify-center mb-6">
           <div className={`inline-block ${cardBg} p-2 sm:p-4 rounded-lg shadow-lg w-full max-w-5xl`}>
             <div 
-              className={`grid gap-0 border-2 ${currentStyle.grid} mx-auto aspect-square`}
+              className={`grid gap-0 border-2 ${currentStyle.grid} mx-auto`}
               style={{ 
                 gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-                maxWidth: gridSize === 9 ? '800px' : gridSize === 6 ? '700px' : '600px',
-                maxHeight: '60vh',
+                maxWidth: gridSize === 9 ? '640px' : gridSize === 6 ? '560px' : '480px',
                 width: '100%'
               }}
             >
