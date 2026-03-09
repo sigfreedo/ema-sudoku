@@ -424,7 +424,37 @@ const EmaSudoku = () => {
     solveSudoku(grid);
     const solution = grid.map(row => [...row]);
     
-    // Rimuovi numeri in base alla difficoltà
+    // Funzione per contare soluzioni (si ferma a 2 per efficienza)
+    const countSolutions = (grid, maxSolutions = 2) => {
+      let count = 0;
+      
+      const solve = (g) => {
+        if (count >= maxSolutions) return; // Stop early
+        
+        for (let row = 0; row < size; row++) {
+          for (let col = 0; col < size; col++) {
+            if (g[row][col] === 0) {
+              for (let num = 1; num <= size; num++) {
+                if (isValid(g, row, col, num)) {
+                  g[row][col] = num;
+                  solve(g);
+                  g[row][col] = 0;
+                }
+              }
+              return;
+            }
+          }
+        }
+        // Soluzione completa trovata
+        count++;
+      };
+      
+      const gridCopy = grid.map(row => [...row]);
+      solve(gridCopy);
+      return count;
+    };
+    
+    // Rimuovi numeri in base alla difficoltà, garantendo soluzione univoca
     const difficultyLevels = {
       easy: { 4: 6, 6: 12, 9: 30 },
       medium: { 4: 8, 6: 16, 9: 45 },
@@ -432,14 +462,33 @@ const EmaSudoku = () => {
     };
     
     const cellsToRemove = difficultyLevels[difficulty][size];
-    let removed = 0;
+    const cellsToTry = [];
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        cellsToTry.push([i, j]);
+      }
+    }
+    // Shuffle celle da provare
+    for (let i = cellsToTry.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cellsToTry[i], cellsToTry[j]] = [cellsToTry[j], cellsToTry[i]];
+    }
     
-    while (removed < cellsToRemove) {
-      const row = Math.floor(Math.random() * size);
-      const col = Math.floor(Math.random() * size);
+    let removed = 0;
+    for (let [row, col] of cellsToTry) {
+      if (removed >= cellsToRemove) break;
+      
       if (grid[row][col] !== 0) {
+        const backup = grid[row][col];
         grid[row][col] = 0;
-        removed++;
+        
+        // Verifica che ci sia ancora una sola soluzione
+        if (countSolutions(grid) === 1) {
+          removed++;
+        } else {
+          // Ripristina se ci sono più soluzioni
+          grid[row][col] = backup;
+        }
       }
     }
     
@@ -465,6 +514,9 @@ const EmaSudoku = () => {
     setErrors([]);
     setCompleted(false);
     setHints(3);
+    setTimerActive(false);
+    setSeconds(0);
+    setHistory([]);
   }, [gridSize, difficulty]);
 
   // Controlla completamento
@@ -922,7 +974,7 @@ const EmaSudoku = () => {
 
         {/* Griglia Sudoku */}
         <div className="flex justify-center mb-6 max-w-4xl mx-auto">
-          <div className={`inline-block ${cardBg} p-2 sm:p-4 rounded-lg shadow-lg w-full`}>
+          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg w-full`}>
             {/* Contenitore esterno con bordo più spesso */}
             <div 
               className={`border-[3px] ${currentStyle.grid} mx-auto overflow-hidden rounded-sm`}
