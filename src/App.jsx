@@ -12,6 +12,7 @@ const EmaSudoku = () => {
   const [hideCompleted, setHideCompleted] = useState(false);
   const [showErrors, setShowErrors] = useState(true);
   const [smartFilter, setSmartFilter] = useState(false);
+  const [suggestionsEnabled, setSuggestionsEnabled] = useState(true);
 
   // Set di simboli disponibili con stile associato
   const symbolSets = {
@@ -805,7 +806,7 @@ const EmaSudoku = () => {
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 pointer-events-none overflow-y-auto">
               <div 
-                className={`${cardBg} border ${borderColor} rounded-lg p-6 shadow-2xl max-w-xl w-full mx-4 my-4 pointer-events-auto animate-slideDown`}
+                className={`${cardBg} border ${borderColor} rounded-lg p-6 shadow-2xl max-w-md w-full mx-4 my-4 pointer-events-auto animate-slideDown`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-start mb-6">
@@ -819,7 +820,7 @@ const EmaSudoku = () => {
               {/* Colore tema corrente per gli accent */}
               {(() => {
                 const themeColors = {
-                  numbers: '#6b7280',
+                  numbers: '#3b82f6',
                   animals: '#d97706', 
                   dinosaurs: '#16a34a',
                   fruits: '#f97316',
@@ -901,7 +902,7 @@ const EmaSudoku = () => {
                         {/* Prima riga */}
                         <div className="flex gap-2 justify-center">
                           {[
-                            { key: 'numbers', icon: '🔢', name: 'Numerico', bg: 'bg-gray-700/70', border: 'border-gray-500' },
+                            { key: 'numbers', icon: '🔢', name: 'Numerico', bg: 'bg-blue-600/70', border: 'border-blue-600' },
                             { key: 'animals', icon: '🐾', name: 'Animalesco', bg: 'bg-amber-600/70', border: 'border-amber-600' },
                             { key: 'dinosaurs', icon: '🦕', name: 'Preistorico', bg: 'bg-green-600/70', border: 'border-green-600' },
                             { key: 'fruits', icon: '🍎', name: 'Fruttoso', bg: 'bg-orange-500/70', border: 'border-orange-500' },
@@ -983,38 +984,41 @@ const EmaSudoku = () => {
                       </div>
                     </div>
 
-                    {/* Opzioni con descrizioni */}
+                    {/* Opzioni in 2x2 grid */}
                     <div>
-                      <label className="block font-semibold mb-2 text-xs uppercase tracking-wide opacity-70">Aiuti</label>
-                      <div className="flex gap-4 text-[10px]">
-                        <div className="flex-1">
-                          <label className="flex items-center gap-1.5 cursor-pointer mb-1">
+                      <label className="block font-semibold mb-3 text-xs uppercase tracking-wide opacity-70">Aiuti</label>
+                      <div className="grid grid-cols-2 gap-4 text-[10px]">
+                        {/* Suggerimenti */}
+                        <div>
+                          <label className="flex items-center justify-between cursor-pointer mb-1">
+                            <span className="font-medium">Suggerimenti</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
-                                checked={hideCompleted}
-                                onChange={(e) => setHideCompleted(e.target.checked)}
+                                checked={suggestionsEnabled}
+                                onChange={(e) => setSuggestionsEnabled(e.target.checked)}
                                 className="sr-only peer"
                               />
                               <div 
                                 className={`w-8 h-4 rounded-full transition-colors ${
-                                  hideCompleted ? '' : 'bg-gray-300 dark:bg-gray-600'
+                                  suggestionsEnabled ? '' : 'bg-gray-300 dark:bg-gray-600'
                                 }`}
-                                style={{ backgroundColor: hideCompleted ? currentThemeColor : '' }}
+                                style={{ backgroundColor: suggestionsEnabled ? currentThemeColor : '' }}
                               ></div>
                               <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
-                                hideCompleted ? 'translate-x-4' : 'translate-x-0'
+                                suggestionsEnabled ? 'translate-x-4' : 'translate-x-0'
                               }`}></div>
                             </div>
-                            <span className="font-medium">Nascondi Completati</span>
                           </label>
-                          <p className="text-[9px] opacity-60 ml-10">
-                            Disabilita simboli già usati {gridSize} volte
+                          <p className="text-[9px] opacity-60 leading-snug">
+                            Abilita 3 suggerimenti per aiutarti a risolvere il puzzle
                           </p>
                         </div>
 
-                        <div className="flex-1">
-                          <label className="flex items-center gap-1.5 cursor-pointer mb-1">
+                        {/* Evidenzia Errori */}
+                        <div>
+                          <label className="flex items-center justify-between cursor-pointer mb-1">
+                            <span className="font-medium">Evidenzia Errori</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
@@ -1032,15 +1036,43 @@ const EmaSudoku = () => {
                                 showErrors ? 'translate-x-4' : 'translate-x-0'
                               }`}></div>
                             </div>
-                            <span className="font-medium">Evidenzia Errori</span>
                           </label>
-                          <p className="text-[9px] opacity-60 ml-10">
-                            Feedback rosso per numeri sbagliati
+                          <p className="text-[9px] opacity-60 leading-snug">
+                            Mostra un bordo rosso quando inserisci un simbolo sbagliato
                           </p>
                         </div>
 
-                        <div className="flex-1">
-                          <label className="flex items-center gap-1.5 cursor-pointer mb-1">
+                        {/* Nascondi Completati */}
+                        <div>
+                          <label className="flex items-center justify-between cursor-pointer mb-1">
+                            <span className="font-medium">Nascondi Completati</span>
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={hideCompleted}
+                                onChange={(e) => setHideCompleted(e.target.checked)}
+                                className="sr-only peer"
+                              />
+                              <div 
+                                className={`w-8 h-4 rounded-full transition-colors ${
+                                  hideCompleted ? '' : 'bg-gray-300 dark:bg-gray-600'
+                                }`}
+                                style={{ backgroundColor: hideCompleted ? currentThemeColor : '' }}
+                              ></div>
+                              <div className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
+                                hideCompleted ? 'translate-x-4' : 'translate-x-0'
+                              }`}></div>
+                            </div>
+                          </label>
+                          <p className="text-[9px] opacity-60 leading-snug">
+                            Disabilita i simboli già inseriti {gridSize} volte nella griglia
+                          </p>
+                        </div>
+
+                        {/* Filtro Intelligente */}
+                        <div>
+                          <label className="flex items-center justify-between cursor-pointer mb-1">
+                            <span className="font-medium">Filtro Intelligente</span>
                             <div className="relative">
                               <input
                                 type="checkbox"
@@ -1058,10 +1090,9 @@ const EmaSudoku = () => {
                                 smartFilter ? 'translate-x-4' : 'translate-x-0'
                               }`}></div>
                             </div>
-                            <span className="font-medium">Filtro Intelligente</span>
                           </label>
-                          <p className="text-[9px] opacity-60 ml-10">
-                            Solo simboli validi per la casella
+                          <p className="text-[9px] opacity-60 leading-snug">
+                            Mostra solo i simboli che possono essere inseriti nella casella
                           </p>
                         </div>
                       </div>
@@ -1263,9 +1294,9 @@ const EmaSudoku = () => {
           {!completed && (
             <button
               onClick={handleHint}
-              disabled={hints === 0 || !selected}
+              disabled={!suggestionsEnabled || hints === 0 || !selected}
               className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md transition-all
-                ${hints > 0 && selected
+                ${suggestionsEnabled && hints > 0 && selected
                   ? `${darkMode ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-yellow-500 hover:bg-yellow-600'} text-white hover:shadow-lg transform hover:scale-105`
                   : `${darkMode ? 'bg-gray-700' : 'bg-gray-300'} ${darkMode ? 'text-gray-500' : 'text-gray-500'} cursor-not-allowed`
                 }`}
