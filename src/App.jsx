@@ -577,11 +577,11 @@ const EmaSudoku = () => {
     <div className={`min-h-screen ${bgColor} ${textColor} p-4 sm:p-8 transition-colors duration-300`}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-5xl font-black tracking-tight flex items-center gap-3" style={{ fontFamily: '"Righteous", sans-serif' }}>
+        <div className="flex items-center justify-between mb-8 gap-4 max-w-4xl mx-auto">
+          <h1 className="text-5xl font-black tracking-tight flex items-center gap-3 flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
             Ema Sudoku 🥷
           </h1>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center flex-shrink-0">
             <button
               onClick={() => setTimerActive(!timerActive)}
               className={`p-2 rounded-lg border ${borderColor} ${hoverBg} transition-colors ${
@@ -614,7 +614,7 @@ const EmaSudoku = () => {
 
         {/* Info Tooltip */}
         {showInfo && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-4 mb-4 shadow-lg`}>
+          <div className={`${cardBg} border ${borderColor} rounded-lg p-4 mb-4 shadow-lg max-w-4xl mx-auto`}>
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-bold text-lg">Come si gioca</h3>
               <button onClick={() => setShowInfo(false)} className={hoverBg}>
@@ -635,7 +635,7 @@ const EmaSudoku = () => {
 
         {/* Pannello Impostazioni */}
         {showSettings && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-6 mb-6 shadow-lg`}>
+          <div className={`${cardBg} border ${borderColor} rounded-lg p-6 mb-6 shadow-lg max-w-4xl mx-auto`}>
             <div className="grid sm:grid-cols-2 gap-6">
               {/* Dimensione griglia */}
               <div>
@@ -723,8 +723,8 @@ const EmaSudoku = () => {
         )}
 
         {/* Griglia Sudoku */}
-        <div className="flex justify-center mb-6">
-          <div className={`inline-block ${cardBg} p-2 sm:p-4 rounded-lg shadow-lg w-full max-w-5xl`}>
+        <div className="flex justify-center mb-6 max-w-4xl mx-auto">
+          <div className={`inline-block ${cardBg} p-2 sm:p-4 rounded-lg shadow-lg w-full`}>
             {/* Contenitore esterno con bordo più spesso */}
             <div 
               className={`border-[3px] ${currentStyle.grid} mx-auto overflow-hidden rounded-sm`}
@@ -744,66 +744,68 @@ const EmaSudoku = () => {
                 }}
               >
                 {/* Genera i blocchi */}
-                {Array.from({ 
-                  length: gridSize === 4 ? 4 : gridSize === 6 ? 6 : 9 
-                }).map((_, blockIndex) => {
+                {(() => {
                   const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
                   const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
-                  const blocksPerRow = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+                  const totalBlockRows = gridSize / blockRows;
+                  const totalBlockCols = gridSize / blockCols;
+                  const totalBlocks = totalBlockRows * totalBlockCols;
                   
-                  const blockRow = Math.floor(blockIndex / blocksPerRow);
-                  const blockCol = blockIndex % blocksPerRow;
-                  
-                  return (
-                    <div 
-                      key={blockIndex}
-                      className="grid"
-                      style={{
-                        gridTemplateColumns: `repeat(${blockCols}, 1fr)`,
-                        gridTemplateRows: `repeat(${blockRows}, 1fr)`,
-                        gap: '1px',
-                        backgroundColor: currentStyle.lineCell
-                      }}
-                    >
-                      {/* Celle all'interno del blocco */}
-                      {Array.from({ length: blockRows * blockCols }).map((_, cellIndex) => {
-                        const cellRow = Math.floor(cellIndex / blockCols);
-                        const cellCol = cellIndex % blockCols;
-                        const rowIndex = blockRow * blockRows + cellRow;
-                        const colIndex = blockCol * blockCols + cellCol;
-                        const cell = board[rowIndex][colIndex];
-                        
-                        const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
-                        const isInSameRow = selected?.row === rowIndex;
-                        const isInSameCol = selected?.col === colIndex;
-                        const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
-                        const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
-                        const isError = errors.includes(`${rowIndex}-${colIndex}`);
-                        
-                        return (
-                          <button
-                            key={`${rowIndex}-${colIndex}`}
-                            onClick={() => handleCellClick(rowIndex, colIndex)}
-                            disabled={completed}
-                            className={`
-                              aspect-square flex items-center justify-center
-                              ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
-                              ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
-                              ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
-                              ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
-                              ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
-                              transition-all duration-150
-                              ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
-                              font-bold
-                            `}
-                          >
-                            {getSymbol(cell)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
+                  return Array.from({ length: totalBlocks }).map((_, blockIndex) => {
+                    const blockRow = Math.floor(blockIndex / totalBlockCols);
+                    const blockCol = blockIndex % totalBlockCols;
+                    
+                    return (
+                      <div 
+                        key={blockIndex}
+                        className="grid"
+                        style={{
+                          gridTemplateColumns: `repeat(${blockCols}, 1fr)`,
+                          gridTemplateRows: `repeat(${blockRows}, 1fr)`,
+                          gap: '1px',
+                          backgroundColor: currentStyle.lineCell
+                        }}
+                      >
+                        {/* Celle all'interno del blocco */}
+                        {Array.from({ length: blockRows * blockCols }).map((_, cellIndex) => {
+                          const cellRow = Math.floor(cellIndex / blockCols);
+                          const cellCol = cellIndex % blockCols;
+                          const rowIndex = blockRow * blockRows + cellRow;
+                          const colIndex = blockCol * blockCols + cellCol;
+                          const cell = board[rowIndex][colIndex];
+                          
+                          const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
+                          const isInSameRow = selected?.row === rowIndex;
+                          const isInSameCol = selected?.col === colIndex;
+                          const isHighlighted = (isInSameRow || isInSameCol) && !isSelected;
+                          const isFixed = game.puzzle[rowIndex][colIndex] !== 0;
+                          const isError = errors.includes(`${rowIndex}-${colIndex}`);
+                          
+                          return (
+                            <button
+                              key={`${rowIndex}-${colIndex}`}
+                              onClick={() => handleCellClick(rowIndex, colIndex)}
+                              disabled={completed}
+                              className={`
+                                aspect-square flex items-center justify-center
+                                ${isFixed ? currentStyle.fixedBg : currentStyle.cellBg}
+                                ${isHighlighted ? (darkMode ? 'brightness-95' : 'brightness-90') : ''}
+                                ${!completed ? 'cursor-pointer hover:brightness-95' : 'cursor-default'}
+                                ${isSelected ? `ring-4 ring-inset ${currentStyle.selected}` : ''}
+                                ${isError ? 'animate-shake bg-red-200 dark:bg-red-900' : ''}
+                                transition-all duration-150
+                                ${gridSize === 9 ? 'text-2xl sm:text-4xl' : gridSize === 6 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl'}
+                                font-bold
+                              `}
+                            >
+                              {getSymbol(cell)}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  });
+                })()}
               </div>
             </div>
           </div>
@@ -811,8 +813,8 @@ const EmaSudoku = () => {
 
         {/* Tastiera simboli */}
         {!completed && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4`}>
-            <div className="flex gap-2 justify-center items-center flex-wrap max-w-5xl mx-auto">
+          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4 max-w-4xl mx-auto`}>
+            <div className="flex gap-2 justify-center items-center flex-wrap">
               {symbolSets[symbolSet][gridSize].map((symbol, index) => (
                 <button
                   key={index}
@@ -839,7 +841,7 @@ const EmaSudoku = () => {
         )}
 
         {/* Controlli */}
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
           <button
             onClick={handleNewGame}
             className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transition-all transform hover:scale-105
