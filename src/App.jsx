@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Lightbulb, Trophy, Info, X, Timer } from 'lucide-react';
+import { Settings, RotateCcw, Lightbulb, Trophy, Info, X, Timer, Undo } from 'lucide-react';
 
 const EmaSudoku = () => {
   // Configurazione
@@ -451,6 +451,7 @@ const EmaSudoku = () => {
   const [hints, setHints] = useState(3);
   const [timerActive, setTimerActive] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [history, setHistory] = useState([]);
 
   // Ricarica gioco quando cambiano impostazioni
   useEffect(() => {
@@ -491,8 +492,18 @@ const EmaSudoku = () => {
   // Input da tastiera (solo per tema numerico)
   useEffect(() => {
     const handleKeyPress = (e) => {
-      if (!selected || completed || symbolSet !== 'numbers') return;
-      if (game.puzzle[selected.row][selected.col] !== 0) return; // Non permettere input su celle fisse
+      if (completed) return;
+      
+      // Backspace o Delete per Undo
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault();
+        handleUndo();
+        return;
+      }
+      
+      // Input numerico solo se tema numerico e cella selezionata
+      if (!selected || symbolSet !== 'numbers') return;
+      if (game.puzzle[selected.row][selected.col] !== 0) return;
       
       const num = parseInt(e.key);
       if (num >= 1 && num <= gridSize) {
@@ -502,7 +513,7 @@ const EmaSudoku = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selected, completed, symbolSet, gridSize, game.puzzle]);
+  }, [selected, completed, symbolSet, gridSize, game.puzzle, history]);
 
   const handleCellClick = (row, col) => {
     // Permetti selezione anche di celle fisse (per aiutare visivamente)
@@ -511,6 +522,9 @@ const EmaSudoku = () => {
 
   const handleSymbolClick = (symbolIndex) => {
     if (selected && game.puzzle[selected.row][selected.col] === 0) {
+      // Salva lo stato corrente nella history
+      setHistory(prev => [...prev.slice(-19), board.map(row => [...row])]);
+      
       const newBoard = board.map(row => [...row]);
       newBoard[selected.row][selected.col] = symbolIndex + 1;
       setBoard(newBoard);
@@ -534,15 +548,27 @@ const EmaSudoku = () => {
     setHints(3);
     setTimerActive(false);
     setSeconds(0);
+    setHistory([]);
   };
 
   const handleHint = () => {
     if (hints > 0 && selected && game.puzzle[selected.row][selected.col] === 0 && board[selected.row][selected.col] === 0) {
+      // Salva lo stato corrente nella history
+      setHistory(prev => [...prev.slice(-19), board.map(row => [...row])]);
+      
       const newBoard = board.map(row => [...row]);
       newBoard[selected.row][selected.col] = game.solution[selected.row][selected.col];
       setBoard(newBoard);
       setHints(hints - 1);
       setSelected(null);
+    }
+  };
+
+  const handleUndo = () => {
+    if (history.length > 0) {
+      const previousBoard = history[history.length - 1];
+      setBoard(previousBoard);
+      setHistory(prev => prev.slice(0, -1));
     }
   };
 
@@ -629,6 +655,9 @@ const EmaSudoku = () => {
                   💡 Suggerimento: Con il tema Numerico puoi usare la tastiera per inserire i numeri più velocemente!
                 </span>
               )}
+              <span className="block mt-2 font-semibold">
+                ⌫ Premi Backspace o Delete per annullare l'ultima mossa!
+              </span>
             </p>
           </div>
         )}
@@ -855,6 +884,22 @@ const EmaSudoku = () => {
             <RotateCcw size={20} />
             Nuovo Gioco
           </button>
+          
+          {!completed && (
+            <button
+              onClick={handleUndo}
+              disabled={history.length === 0}
+              className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md transition-all
+                ${history.length > 0
+                  ? `${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white hover:shadow-lg transform hover:scale-105`
+                  : `${darkMode ? 'bg-gray-700' : 'bg-gray-300'} ${darkMode ? 'text-gray-500' : 'text-gray-500'} cursor-not-allowed`
+                }`}
+              title="Annulla ultima mossa (Backspace/Delete)"
+            >
+              <Undo size={20} />
+              Annulla
+            </button>
+          )}
           
           {!completed && (
             <button
