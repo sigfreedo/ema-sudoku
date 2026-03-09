@@ -10,6 +10,8 @@ const EmaSudoku = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [showErrors, setShowErrors] = useState(true);
+  const [smartFilter, setSmartFilter] = useState(false);
 
   // Set di simboli disponibili con stile associato
   const symbolSets = {
@@ -530,7 +532,8 @@ const EmaSudoku = () => {
       newBoard[selected.row][selected.col] = symbolIndex + 1;
       setBoard(newBoard);
       
-      if (symbolIndex + 1 !== game.solution[selected.row][selected.col]) {
+      // Mostra errore solo se l'opzione è attiva
+      if (showErrors && symbolIndex + 1 !== game.solution[selected.row][selected.col]) {
         setErrors([...errors, `${selected.row}-${selected.col}`]);
         setTimeout(() => {
           setErrors(errors.filter(e => e !== `${selected.row}-${selected.col}`));
@@ -595,6 +598,47 @@ const EmaSudoku = () => {
   // Verifica se un simbolo è completato (usato gridSize volte)
   const isSymbolCompleted = (symbolValue) => {
     return hideCompleted && getSymbolCount(symbolValue) >= gridSize;
+  };
+
+  // Calcola quali simboli sono validi per una data cella (per filtro intelligente)
+  const getValidSymbols = (row, col) => {
+    if (!smartFilter || !selected) return Array.from({ length: gridSize }, (_, i) => i + 1);
+    
+    const blockRows = gridSize === 4 ? 2 : gridSize === 6 ? 2 : 3;
+    const blockCols = gridSize === 4 ? 2 : gridSize === 6 ? 3 : 3;
+    const blockRow = Math.floor(row / blockRows);
+    const blockCol = Math.floor(col / blockCols);
+    
+    const usedNumbers = new Set();
+    
+    // Controlla riga
+    for (let c = 0; c < gridSize; c++) {
+      if (board[row][c] !== 0) usedNumbers.add(board[row][c]);
+    }
+    
+    // Controlla colonna
+    for (let r = 0; r < gridSize; r++) {
+      if (board[r][col] !== 0) usedNumbers.add(board[r][col]);
+    }
+    
+    // Controlla blocco
+    const startRow = blockRow * blockRows;
+    const startCol = blockCol * blockCols;
+    for (let r = startRow; r < startRow + blockRows; r++) {
+      for (let c = startCol; c < startCol + blockCols; c++) {
+        if (board[r][c] !== 0) usedNumbers.add(board[r][c]);
+      }
+    }
+    
+    // Ritorna simboli validi (quelli non usati)
+    const validSymbols = [];
+    for (let i = 1; i <= gridSize; i++) {
+      if (!usedNumbers.has(i)) {
+        validSymbols.push(i);
+      }
+    }
+    
+    return validSymbols;
   };
 
   const getSymbol = (num) => {
@@ -684,7 +728,7 @@ const EmaSudoku = () => {
         {/* Pannello Impostazioni */}
         {showSettings && (
           <div className={`${cardBg} border ${borderColor} rounded-lg p-6 mb-6 shadow-lg max-w-4xl mx-auto`}>
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Dimensione griglia */}
               <div>
                 <label className="block font-semibold mb-2">Dimensione Griglia</label>
@@ -788,6 +832,54 @@ const EmaSudoku = () => {
                 </label>
                 <p className="text-xs opacity-70 mt-1">
                   Disabilita i simboli già inseriti {gridSize} volte
+                </p>
+              </div>
+
+              {/* Mostra Errori Toggle */}
+              <div>
+                <label className="flex items-center justify-between cursor-pointer">
+                  <span className="font-semibold">Evidenzia Errori</span>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={showErrors}
+                      onChange={(e) => setShowErrors(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className={`w-14 h-7 rounded-full transition-colors ${
+                      showErrors ? 'bg-blue-600' : 'bg-gray-300'
+                    }`}></div>
+                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
+                      showErrors ? 'translate-x-7' : 'translate-x-0'
+                    }`}></div>
+                  </div>
+                </label>
+                <p className="text-xs opacity-70 mt-1">
+                  Mostra feedback rosso per errori
+                </p>
+              </div>
+
+              {/* Filtro Intelligente Toggle */}
+              <div>
+                <label className="flex items-center justify-between cursor-pointer">
+                  <span className="font-semibold">Filtro Intelligente</span>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={smartFilter}
+                      onChange={(e) => setSmartFilter(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className={`w-14 h-7 rounded-full transition-colors ${
+                      smartFilter ? 'bg-blue-600' : 'bg-gray-300'
+                    }`}></div>
+                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
+                      smartFilter ? 'translate-x-7' : 'translate-x-0'
+                    }`}></div>
+                  </div>
+                </label>
+                <p className="text-xs opacity-70 mt-1">
+                  Mostra solo simboli validi per la casella
                 </p>
               </div>
             </div>
@@ -896,14 +988,18 @@ const EmaSudoku = () => {
                 const symbolValue = index + 1;
                 const isCompleted = isSymbolCompleted(symbolValue);
                 
+                // Calcola simboli validi per la cella selezionata (filtro intelligente)
+                const validSymbols = selected ? getValidSymbols(selected.row, selected.col) : [];
+                const isValidForCell = !smartFilter || validSymbols.includes(symbolValue);
+                
                 // Determina lo stato del pulsante
                 const isFixedCell = selected && game.puzzle[selected.row][selected.col] !== 0;
                 const isCurrentValue = selected && board[selected.row][selected.col] === symbolValue;
-                const isClickable = selected && !isFixedCell && !isCompleted;
+                const isClickable = selected && !isFixedCell && !isCompleted && isValidForCell;
                 
                 // Stati visuali
                 let buttonStyle = '';
-                if (!selected || isFixedCell || isCompleted) {
+                if (!selected || isFixedCell || isCompleted || !isValidForCell) {
                   // Stato 1: Disabilitato (bianco/grigio)
                   buttonStyle = `${currentStyle.buttonInactive} cursor-not-allowed opacity-50`;
                 } else if (isCurrentValue) {
@@ -912,6 +1008,14 @@ const EmaSudoku = () => {
                 } else {
                   // Stato 2: Attivo normale
                   buttonStyle = `${currentStyle.buttonActive} hover:brightness-110 hover:shadow-xl hover:border-white/40 active:scale-95 shadow-md cursor-pointer`;
+                }
+                
+                // Tooltip informativo
+                let tooltipText = '';
+                if (isCompleted) {
+                  tooltipText = `Tutti i ${symbol} sono stati inseriti`;
+                } else if (smartFilter && !isValidForCell && selected && !isFixedCell) {
+                  tooltipText = `${symbol} non può stare qui (già presente in riga, colonna o blocco)`;
                 }
                 
                 return (
@@ -929,7 +1033,7 @@ const EmaSudoku = () => {
                         : 'text-3xl sm:text-4xl w-16 h-16 sm:w-20 sm:h-20'
                       }
                     `}
-                    title={isCompleted ? `Tutti i ${symbol} sono stati inseriti` : ''}
+                    title={tooltipText}
                   >
                     {symbol}
                   </button>
