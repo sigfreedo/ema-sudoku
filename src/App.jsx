@@ -9,6 +9,7 @@ const EmaSudoku = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(false);
 
   // Set di simboli disponibili con stile associato
   const symbolSets = {
@@ -578,6 +579,24 @@ const EmaSudoku = () => {
     return `${mins}:${remainingSecs.toString().padStart(2, '0')}`;
   };
 
+  // Conta quante volte ogni simbolo appare nella griglia
+  const getSymbolCount = (symbolValue) => {
+    let count = 0;
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        if (board[i][j] === symbolValue) {
+          count++;
+        }
+      }
+    }
+    return count;
+  };
+
+  // Verifica se un simbolo è completato (usato gridSize volte)
+  const isSymbolCompleted = (symbolValue) => {
+    return hideCompleted && getSymbolCount(symbolValue) >= gridSize;
+  };
+
   const getSymbol = (num) => {
     if (num === 0) return '';
     return symbolSets[symbolSet][gridSize][num - 1];
@@ -747,6 +766,30 @@ const EmaSudoku = () => {
                   </div>
                 </label>
               </div>
+
+              {/* Nascondi Elementi Completati Toggle */}
+              <div>
+                <label className="flex items-center justify-between cursor-pointer">
+                  <span className="font-semibold">Nascondi Completati</span>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={hideCompleted}
+                      onChange={(e) => setHideCompleted(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className={`w-14 h-7 rounded-full transition-colors ${
+                      hideCompleted ? 'bg-blue-600' : 'bg-gray-300'
+                    }`}></div>
+                    <div className={`absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform ${
+                      hideCompleted ? 'translate-x-7' : 'translate-x-0'
+                    }`}></div>
+                  </div>
+                </label>
+                <p className="text-xs opacity-70 mt-1">
+                  Disabilita i simboli già inseriti {gridSize} volte
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -849,27 +892,49 @@ const EmaSudoku = () => {
         {!completed && (
           <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4 max-w-4xl mx-auto`}>
             <div className="flex gap-2 justify-center items-center flex-wrap">
-              {symbolSets[symbolSet][gridSize].map((symbol, index) => (
-                <button
-                  key={index}
-                  onClick={() => selected && handleSymbolClick(index)}
-                  className={`
-                    rounded-lg font-bold transition-all border-2
-                    ${selected 
-                      ? `${currentStyle.buttonActive} hover:brightness-110 hover:shadow-xl hover:border-white/40 active:scale-95 shadow-md cursor-pointer` 
-                      : `${currentStyle.buttonInactive} cursor-not-allowed`
-                    }
-                    ${gridSize === 9 
-                      ? 'text-xl sm:text-2xl w-12 h-12 sm:w-14 sm:h-14' 
-                      : gridSize === 6 
-                      ? 'text-2xl sm:text-3xl w-14 h-14 sm:w-16 sm:h-16' 
-                      : 'text-3xl sm:text-4xl w-16 h-16 sm:w-20 sm:h-20'
-                    }
-                  `}
-                >
-                  {symbol}
-                </button>
-              ))}
+              {symbolSets[symbolSet][gridSize].map((symbol, index) => {
+                const symbolValue = index + 1;
+                const isCompleted = isSymbolCompleted(symbolValue);
+                
+                // Determina lo stato del pulsante
+                const isFixedCell = selected && game.puzzle[selected.row][selected.col] !== 0;
+                const isCurrentValue = selected && board[selected.row][selected.col] === symbolValue;
+                const isClickable = selected && !isFixedCell && !isCompleted;
+                
+                // Stati visuali
+                let buttonStyle = '';
+                if (!selected || isFixedCell || isCompleted) {
+                  // Stato 1: Disabilitato (bianco/grigio)
+                  buttonStyle = `${currentStyle.buttonInactive} cursor-not-allowed opacity-50`;
+                } else if (isCurrentValue) {
+                  // Stato 3: Valore corrente (evidenziato con ring)
+                  buttonStyle = `${currentStyle.buttonActive} ring-4 ${currentStyle.selected} shadow-lg cursor-pointer`;
+                } else {
+                  // Stato 2: Attivo normale
+                  buttonStyle = `${currentStyle.buttonActive} hover:brightness-110 hover:shadow-xl hover:border-white/40 active:scale-95 shadow-md cursor-pointer`;
+                }
+                
+                return (
+                  <button
+                    key={index}
+                    onClick={() => isClickable && handleSymbolClick(index)}
+                    disabled={!isClickable}
+                    className={`
+                      rounded-lg font-bold transition-all border-2
+                      ${buttonStyle}
+                      ${gridSize === 9 
+                        ? 'text-xl sm:text-2xl w-12 h-12 sm:w-14 sm:h-14' 
+                        : gridSize === 6 
+                        ? 'text-2xl sm:text-3xl w-14 h-14 sm:w-16 sm:h-16' 
+                        : 'text-3xl sm:text-4xl w-16 h-16 sm:w-20 sm:h-20'
+                      }
+                    `}
+                    title={isCompleted ? `Tutti i ${symbol} sono stati inseriti` : ''}
+                  >
+                    {symbol}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
