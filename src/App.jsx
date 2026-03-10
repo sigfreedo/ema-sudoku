@@ -1020,7 +1020,7 @@ const EmaSudoku = () => {
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 pointer-events-none">
               <div 
-                className={`${cardBg} border ${borderColor} rounded-lg p-6 shadow-2xl max-w-2xl w-full mx-4 pointer-events-auto animate-slideDown`}
+                className={`${cardBg} border ${borderColor} rounded-lg p-6 shadow-2xl max-w-xl w-full mx-4 pointer-events-auto animate-slideDown`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-start mb-4">
@@ -1354,13 +1354,13 @@ const EmaSudoku = () => {
         )}
 
         {/* Griglia Sudoku */}
-        <div className="flex justify-center mb-6 max-w-4xl mx-auto">
+        <div className="flex justify-center mb-6 max-w-2xl mx-auto">
           <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg w-full`}>
             {/* Contenitore esterno con bordo più spesso */}
             <div 
               className={`border-[3px] ${currentStyle.grid} mx-auto overflow-hidden rounded-sm`}
               style={{ 
-                maxWidth: gridSize === 9 ? '590px' : gridSize === 6 ? '560px' : '480px',
+                maxWidth: gridSize === 9 ? '580px' : gridSize === 6 ? '560px' : '480px',
                 width: '100%'
               }}
             >
@@ -1449,7 +1449,7 @@ const EmaSudoku = () => {
 
         {/* Tastiera simboli */}
         {!completed && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4 max-w-4xl mx-auto`}>
+          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4 max-w-2xl mx-auto`}>
             <div className="flex gap-2 justify-center items-center flex-wrap">
               {symbolSets[symbolSet][gridSize].map((symbol, index) => {
                 const symbolValue = index + 1;
@@ -1511,7 +1511,7 @@ const EmaSudoku = () => {
         )}
 
         {/* Controlli */}
-        <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
+        <div className="flex flex-wrap gap-3 justify-center max-w-2xl mx-auto">
           <button
             onClick={handleNewGame}
             className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transition-all transform hover:scale-105
