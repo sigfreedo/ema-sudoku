@@ -907,10 +907,10 @@ const EmaSudoku = () => {
     <div className={`min-h-screen ${bgColor} ${textColor} p-4 sm:p-8 transition-colors duration-300`}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 max-w-2xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 mx-auto" style={{ maxWidth: '620px' }}>
           <h1 className="flex flex-col items-center sm:items-start flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
-            <span className="text-5xl sm:text-6xl font-black tracking-tight">Ema</span>
-            <span className="text-2xl sm:text-3xl font-black tracking-tight -mt-2">Sudoku 🥷</span>
+            <span className="text-5xl sm:text-6xl font-black tracking-tight">Ema 🥷</span>
+            <span className="text-3xl sm:text-4xl font-black tracking-tight -mt-2">Sudoku</span>
           </h1>
           <div className="flex gap-2 items-center flex-shrink-0 flex-wrap justify-center">
             {/* Timer Button - minimal icon only, SAME HEIGHT as others */}
@@ -1355,7 +1355,7 @@ const EmaSudoku = () => {
         )}
 
         {/* Griglia Sudoku */}
-        <div className="flex justify-center mb-6 max-w-2xl mx-auto">
+        <div className="flex justify-center mb-6 mx-auto" style={{ maxWidth: gridSize === 9 ? '620px' : gridSize === 6 ? '600px' : '520px' }}>
           <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg w-full`}>
             {/* Contenitore esterno con bordo più spesso */}
             <div 
@@ -1450,7 +1450,7 @@ const EmaSudoku = () => {
 
         {/* Tastiera simboli */}
         {!completed && (
-          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4 max-w-2xl mx-auto`}>
+          <div className={`${cardBg} border ${borderColor} rounded-lg p-3 sm:p-4 shadow-lg mb-4 mx-auto`} style={{ maxWidth: gridSize === 9 ? '620px' : gridSize === 6 ? '600px' : '520px' }}>
             <div className="flex gap-2 justify-center items-center flex-wrap">
               {symbolSets[symbolSet][gridSize].map((symbol, index) => {
                 const symbolValue = index + 1;
@@ -1512,7 +1512,7 @@ const EmaSudoku = () => {
         )}
 
         {/* Controlli */}
-        <div className="flex flex-wrap gap-3 justify-center max-w-2xl mx-auto">
+        <div className="flex flex-wrap gap-3 justify-center mx-auto" style={{ maxWidth: gridSize === 9 ? '620px' : gridSize === 6 ? '600px' : '520px' }}>
           <button
             onClick={handleNewGame}
             className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transition-all transform hover:scale-105
