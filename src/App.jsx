@@ -907,9 +907,10 @@ const EmaSudoku = () => {
     <div className={`min-h-screen ${bgColor} ${textColor} p-4 sm:p-8 transition-colors duration-300`}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight flex items-center gap-3 flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
-            {t.title}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 max-w-2xl mx-auto">
+          <h1 className="flex flex-col items-center sm:items-start flex-shrink-0" style={{ fontFamily: '"Righteous", sans-serif' }}>
+            <span className="text-5xl sm:text-6xl font-black tracking-tight">Ema</span>
+            <span className="text-2xl sm:text-3xl font-black tracking-tight -mt-2">Sudoku 🥷</span>
           </h1>
           <div className="flex gap-2 items-center flex-shrink-0 flex-wrap justify-center">
             {/* Timer Button - minimal icon only, SAME HEIGHT as others */}
